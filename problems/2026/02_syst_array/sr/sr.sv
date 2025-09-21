@@ -28,7 +28,10 @@ generate
     if (DEPTH > 0) begin
         for (genvar i = 1; i < DEPTH; i++) begin: gen_shift
             always_ff @(posedge clk or negedge rst_n)
-                shift_dat_vld_ff[i] <= shift_dat_vld_ff[i-1];
+                if (~rst_n)
+                    shift_dat_vld_ff[i] <= 0;
+                else
+                    shift_dat_vld_ff[i] <= shift_dat_vld_ff[i-1];
 
             always_ff @(posedge clk or negedge rst_n)
                 shift_dat_ff[i] <= shift_dat_ff[i-1];
