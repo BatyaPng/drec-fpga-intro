@@ -1,0 +1,43 @@
+module sr #(
+    parameter DEPTH = 1,
+    parameter DAT_WIDTH = 16
+) (
+    input  logic clk,
+    input  logic rst_n,
+
+    input  logic i_en,
+
+    input  logic i_dat_vld,
+    input  logic [DAT_WIDTH-1:0] i_dat,
+
+    output logic o_dat_vld,
+    output logic [DAT_WIDTH-1:0] o_dat
+);
+
+logic                 shift_dat_vld_ff [DEPTH];
+logic [DAT_WIDTH-1:0] shift_dat_ff     [DEPTH];
+
+always_ff @(posedge clk or negedge rst_n)
+    if (i_en)
+        shift_dat_vld_ff[0] <= i_dat_vld;
+
+always_ff @(posedge clk or negedge rst_n)
+    if (i_en)
+        shift_dat_ff[0] <= i_dat;
+
+generate
+    for (genvar i = 1; i < DEPTH; i++) begin: gen_shift
+        always_ff @(posedge clk or negedge rst_n)
+            if (i_en)
+                shift_dat_vld_ff[i] <= shift_dat_vld_ff[i-1];
+
+        always_ff @(posedge clk or negedge rst_n)
+            if (i_en)
+                shift_dat_ff[i] <= shift_dat_ff[i-1];
+    end
+endgenerate
+
+assign o_dat_vld = shift_dat_vld_ff[DEPTH-1];
+assign o_dat     = shift_dat_ff[DEPTH-1];
+
+endmodule
