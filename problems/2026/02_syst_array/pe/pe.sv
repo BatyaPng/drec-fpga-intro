@@ -71,7 +71,7 @@ assign o_c_vld = c_vld_ff;
 logic [O_WIDTH-1:0] c_ff;
 logic [O_WIDTH-1:0] c_next;
 
-assign c_next = i_a * b_ff + O_WIDTH'(i_c);
+assign c_next = O_WIDTH'(i_a) * O_WIDTH'(b_ff) + O_WIDTH'(i_c);
 
 always_ff @(posedge clk or negedge rst_n)
     c_ff <= c_next;
