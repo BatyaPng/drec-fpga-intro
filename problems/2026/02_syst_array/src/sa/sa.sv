@@ -1,7 +1,7 @@
 module sa #(
     parameter SIZE = 4,
-    parameter I_WIDTH = 16,
-    parameter O_WIDTH = I_WIDTH * SIZE - SIZE
+    parameter X_WIDTH = 16,
+    parameter Y_WIDTH = X_WIDTH * SIZE - SIZE
 ) (
     input  logic clk,
     input  logic rst_n,
@@ -10,13 +10,13 @@ module sa #(
     input  logic i_we,
 
     input  logic               i_matrix_vld,
-    input  logic [I_WIDTH-1:0] i_matrix [SIZE][SIZE],
+    input  logic [X_WIDTH-1:0] i_matrix [SIZE][SIZE],
 
     output logic               o_matrix_vld,
-    output logic [O_WIDTH-1:0] o_matrix [SIZE][SIZE]
+    output logic [Y_WIDTH-1:0] o_matrix [SIZE][SIZE]
 );
 
-logic [I_WIDTH-1:0] row [SIZE];
+logic [X_WIDTH-1:0] row [SIZE];
 
 generate
     for (genvar i = 0; i < SIZE; i++) begin: gen_row_assign
@@ -26,13 +26,13 @@ endgenerate
 
 // sr row inst
 logic               row_vld_delayed [SIZE];
-logic [I_WIDTH-1:0] row_delayed     [SIZE];
+logic [X_WIDTH-1:0] row_delayed     [SIZE];
 
 generate
     for (genvar i = 0; i < SIZE; i++) begin: gen_sr_row_inst
         sr #(
             .DEPTH     (i             ),
-            .DAT_WIDTH (I_WIDTH       )
+            .DAT_WIDTH (X_WIDTH       )
         ) u_sr (
             .clk       (clk           ),
             .rst_n     (rst_n         ),
@@ -49,10 +49,10 @@ endgenerate
 // pe inst
 
 logic               pe_x_vld [SIZE+1][SIZE];
-logic [I_WIDTH-1:0] pe_x     [SIZE+1][SIZE];
+logic [X_WIDTH-1:0] pe_x     [SIZE+1][SIZE];
 
 logic               pe_y_vld [SIZE][SIZE+1];
-logic [O_WIDTH-1:0] pe_y     [SIZE][SIZE+1];
+logic [Y_WIDTH-1:0] pe_y     [SIZE][SIZE+1];
 
 logic               pe_we [SIZE][SIZE+1];
 
@@ -66,7 +66,7 @@ endgenerate
 generate
     for (genvar x = 0; x < SIZE; x++) begin: gen_row0
         assign pe_y_vld[0][x] = 1;
-        assign pe_y[0][x] = O_WIDTH'(0);
+        assign pe_y[0][x] = Y_WIDTH'(0);
 
         assign pe_we[0][x] = i_we;
     end
@@ -76,9 +76,8 @@ generate
     for (genvar i = 0; i < SIZE ; i++) begin: gen_pe_x
         for (genvar j = 0; j < SIZE ; j++) begin: gen_pe_y
             pe #(
-                .A_WIDTH (I_WIDTH ),
-                .C_WIDTH (I_WIDTH ),
-                .O_WIDTH (I_WIDTH )
+                .X_WIDTH (X_WIDTH ),
+                .Y_WIDTH (Y_WIDTH )
             ) u_pe (
                 .clk     (clk     ),
                 .rst_n   (rst_n   ),
@@ -93,8 +92,8 @@ generate
 
                 .i_a_vld (pe_x_vld[i][j]),
                 .i_a     (pe_x[i][j]),
-                .o_a_vld (o_a_vld[i][j+1] ),
-                .o_a     (o_a[i][j+1]     )
+                .o_a_vld (pe_x_vld[i][j+1] ),
+                .o_a     (pe_x[i][j+1]     )
             );
             end
         end
@@ -102,13 +101,13 @@ endgenerate
 
 // sr col inst
 logic               col_vld_delayed [SIZE];
-logic [O_WIDTH-1:0] col_delayed     [SIZE];
+logic [Y_WIDTH-1:0] col_delayed     [SIZE];
 
 generate
     for (genvar i = 0; i < SIZE ; i++) begin: gen_sr_col_inst
         sr #(
             .DEPTH (SIZE - 1 - i),
-            .DAT_WIDTH (O_WIDTH)
+            .DAT_WIDTH (Y_WIDTH)
         ) u_sr (
             .clk (clk),
             .rst_n (rst_n),
@@ -143,7 +142,7 @@ end
 
 logic               matrix_en;
 logic               matrix_vld;
-logic [O_WIDTH-1:0] matrix_ff [SIZE][SIZE];
+logic [Y_WIDTH-1:0] matrix_ff [SIZE][SIZE];
 
 assign matrix_en  = cnt_start | cnt_stop;
 assign matrix_vld = cnt_stop;

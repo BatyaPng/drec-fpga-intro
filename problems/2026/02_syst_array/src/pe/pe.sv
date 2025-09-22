@@ -1,7 +1,6 @@
 module pe #(
-    parameter A_WIDTH = 16,
-    parameter C_WIDTH = A_WIDTH,
-    parameter O_WIDTH = A_WIDTH + C_WIDTH - 1
+    parameter X_WIDTH = 16,
+    parameter Y_WIDTH = X_WIDTH + X_WIDTH - 1
 ) (
     input  logic clk,
     input  logic rst_n,
@@ -11,24 +10,24 @@ module pe #(
 
     output logic o_we,
 
-    // compute
+    // column
     input  logic               i_c_vld,
-    input  logic [C_WIDTH-1:0] i_c,
+    input  logic [Y_WIDTH-1:0] i_c,
 
     output logic               o_c_vld,
-    output logic [O_WIDTH-1:0] o_c,
+    output logic [Y_WIDTH-1:0] o_c,
 
-    // data
+    // row
     input  logic               i_a_vld,
-    input  logic [A_WIDTH-1:0] i_a,
+    input  logic [X_WIDTH-1:0] i_a,
 
     output logic               o_a_vld,
-    output logic [A_WIDTH-1:0] o_a
+    output logic [X_WIDTH-1:0] o_a
 );
 
 // a ingress ff's
 logic               a_vld_ff;
-logic [A_WIDTH-1:0] a_ff;
+logic [X_WIDTH-1:0] a_ff;
 
 always_ff @(posedge clk or negedge rst_n) begin
     a_vld_ff <= i_a_vld;
@@ -40,7 +39,7 @@ assign o_a     = a_ff;
 
 // write
 logic               b_en;
-logic [A_WIDTH-1:0] b_ff;
+logic [X_WIDTH-1:0] b_ff;
 
 assign b_en = i_we & i_a_vld;
 
@@ -68,10 +67,10 @@ always_ff @(posedge clk or negedge rst_n)
 assign o_c_vld = c_vld_ff;
 
 // compute
-logic [O_WIDTH-1:0] c_ff;
-logic [O_WIDTH-1:0] c_next;
+logic [Y_WIDTH-1:0] c_ff;
+logic [Y_WIDTH-1:0] c_next;
 
-assign c_next = O_WIDTH'(i_a) * O_WIDTH'(b_ff) + O_WIDTH'(i_c);
+assign c_next = Y_WIDTH'(i_a) * Y_WIDTH'(b_ff) + Y_WIDTH'(i_c);
 
 always_ff @(posedge clk or negedge rst_n)
     c_ff <= c_next;
