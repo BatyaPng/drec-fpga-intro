@@ -1,0 +1,4 @@
+`verilator_config
+
+lint_off -rule UNUSEDSIGNAL -file "src/sr/sr.sv" -match "Signal is not used: 'clk'"
+lint_off -rule UNUSEDSIGNAL -file "src/sr/sr.sv" -match "Signal is not used: 'rst_n'"
