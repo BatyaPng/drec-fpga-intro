@@ -94,7 +94,7 @@ generate
                 .i_a_vld (pe_x_vld[i][j]),
                 .i_a     (pe_x[i][j]),
                 .o_a_vld (o_a_vld[i][j+1] ),
-                .o_a     (o_a[i][j+2]     )
+                .o_a     (o_a[i][j+1]     )
             );
             end
         end
