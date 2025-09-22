@@ -13,7 +13,7 @@ module sr #(
 );
 
 generate
-    if (DEPTH > 0) begin
+    if (DEPTH > 0) begin: gen_nonzero_depth
         logic                 shift_dat_vld_ff [DEPTH];
         logic [DAT_WIDTH-1:0] shift_dat_ff     [DEPTH];
 
@@ -41,7 +41,7 @@ generate
         assign o_dat     = shift_dat_ff[DEPTH-1];
 
     end
-    else begin
+    else begin: gen_zero_depth
         assign o_dat_vld = i_dat_vld;
         assign o_dat     = i_dat;
     end
