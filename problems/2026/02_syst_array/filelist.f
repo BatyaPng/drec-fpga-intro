@@ -1,0 +1,9 @@
++incdir+pe
++incdir+sr
++incdir+sa
+src/sa/sa_pkg.sv
+src/pe/pe.sv
+src/sr/sr.sv
+src/sa/sa.sv
+src/sa/sa_tb.sv
+src/sa/matrix_mul.cpp
