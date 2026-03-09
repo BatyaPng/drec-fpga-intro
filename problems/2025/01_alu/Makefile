@@ -1,7 +1,5 @@
 TB_LIST := alu_tb.v
 
-PKG_LIST := alu_pkg.v
-
 RTL_LIST := alu.v
 
 sim: $(TB_LIST) $(RTL_LIST)

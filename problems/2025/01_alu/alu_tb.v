@@ -23,7 +23,7 @@ alu_op_t i_op;
 
 wire [31:0] o_res;
 
-alu alu (
+alu dut (
     .i_a  (i_a),
     .i_b  (i_b),
     .i_op (i_op),
