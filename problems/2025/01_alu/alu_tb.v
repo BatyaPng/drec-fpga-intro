@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+`include "alu_inc.vh"
+
 module alu_tb;
 
 typedef enum reg [3:0] {

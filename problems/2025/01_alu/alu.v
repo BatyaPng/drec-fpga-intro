@@ -1,15 +1,4 @@
-typedef enum reg [3:0] {
-    ADD,
-    SUB,
-    SLL,
-    SLT,
-    SLTU,
-    XOR,
-    SRL,
-    SRA,
-    OR,
-    AND
-} alu_op_t;
+`include "alu_inc.vh"
 
 module alu (
     input  wire [31:0] i_a,
