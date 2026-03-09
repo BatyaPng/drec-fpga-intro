@@ -11,23 +11,33 @@ wire [M-1:0] o_data_structural;
 
 integer errors = 0;
 
-signext_b #(N, M) dut_b (.i_data(i_data), .o_data(o_data_behavioral));
-signext_s #(N, M) dut_s (.i_data(i_data), .o_data(o_data_structural));
+signext_b #(
+    .N(N),
+    .M(M)
+) dut_b (
+    .i_data(i_data),
+    .o_data(o_data_behavioral)
+);
+
+signext_s #(
+    .N(N),
+    .M(M)
+) dut_s (
+    .i_data(i_data),
+    .o_data(o_data_structural)
+);
 
 initial begin
     $dumpvars;
 
-    // Test Case 1: Positive Number
     i_data = $unsigned($random) % N;
     #10;
     compare(i_data, o_data_behavioral, o_data_structural);
 
-    // Test Case 2: Negative Number (MSB = 1)
-    i_data = -($unsigned($random) % N) - 1; // All ones (Decimal -1)
+    i_data = -($unsigned($random) % N) - 1;
     #10;
     compare(i_data, o_data_behavioral, o_data_structural);
 
-    // Test Case 3: Minimum Signed Value
     i_data = {1'b1, {(N-1){1'b0}}};
     #10;
     compare(i_data, o_data_behavioral, o_data_structural);
@@ -40,13 +50,11 @@ initial begin
     $finish;
 end
 
-// Comparison task using global localparams
 task compare(
     input [N-1:0] in,
     input [M-1:0] behavioral,
     input [M-1:0] structural
 );
-    // Using $signed to interpret the bit vectors as decimal
     integer dec_in, dec_beh, dec_str;
     begin
         dec_in  = $signed(in);
