@@ -17,7 +17,7 @@ mux4 #(
 );
 
 initial begin
-    $display("Starting MUX4 Simulation...");
+    $dumpvars;
 
     $monitor("Time: %0t | sel: %b | data in (3 to 0): %h %h %h %h | OUT: %h",
              $time, tb_i_sel, tb_i_data[3], tb_i_data[2], tb_i_data[1], tb_i_data[0], tb_o_data);
@@ -38,7 +38,6 @@ initial begin
     tb_i_sel = 2'b00; #10;
     tb_i_sel = 2'b11; #10;
 
-    $display("Simulation complete.");
     $finish;
 end
 
