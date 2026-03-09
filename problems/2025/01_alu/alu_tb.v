@@ -13,11 +13,11 @@ typedef enum reg [3:0] {
     SRA,
     OR,
     AND
-} op_t;
+} alu_op_t;
 
 reg [31:0] i_a;
 reg [31:0] i_b;
-op_t i_op;
+alu_op_t i_op;
 
 wire [31:0] o_res;
 
@@ -29,7 +29,7 @@ alu alu (
 );
 
 task test_op;
-    input op_t   op;
+    input alu_op_t   op;
     input [31:0] a;
     input [31:0] b;
     input [31:0] expected;

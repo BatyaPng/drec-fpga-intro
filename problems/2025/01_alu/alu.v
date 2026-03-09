@@ -9,13 +9,13 @@ typedef enum reg [3:0] {
     SRA,
     OR,
     AND
-} op_t;
+} alu_op_t;
 
 module alu (
     input  wire [31:0] i_a,
     input  wire [31:0] i_b,
 
-    input  op_t i_op,
+    input  alu_op_t i_op,
 
     output reg [31:0] o_res
 );
