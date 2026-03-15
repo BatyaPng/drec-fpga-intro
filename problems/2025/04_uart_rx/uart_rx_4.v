@@ -46,13 +46,13 @@ assign load = state == IDLE && rx_fall;
 
 counter_4 #(
     .CNT_WIDTH  ($clog2(FREQ/RATE)),
-    .CNT_LOAD   (0                ),
+    .CNT_LOAD   (FREQ/RATE/2      ),
     .CNT_MAX    (FREQ/RATE-1      )
 ) cnt (
-    .clk        (clk        ),
-    .rst_n      (rst_n      ),
-    .i_load     (FREQ/RATE/2),
-    .o_en       (en         )
+    .clk        (clk  ),
+    .rst_n      (rst_n),
+    .i_load     (load ),
+    .o_en       (en   )
 );
 
 always @(*) begin
