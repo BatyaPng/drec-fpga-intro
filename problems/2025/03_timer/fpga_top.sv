@@ -32,7 +32,7 @@ timer timer (
 wire  [3:0] anodes;
 wire  [7:0] segments;
 
-hex_display hex_display(clk_1MHz, rst_n, {4'h0, sec}, anodes, segments);
+hex_display hex_display(clk_1MHz, rst_n, {4'(0), sec}, anodes, segments);
 
 ctrl_74hc595 ctrl(
     .clk    (clk_1MHz           ),
