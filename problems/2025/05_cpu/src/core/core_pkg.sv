@@ -1,29 +1,29 @@
 package core_pkg;
 
-  typedef struct packed {
+typedef struct packed {
     logic [6:0] funct7;
     logic [4:0] rs2;
     logic [4:0] rs1;
     logic [2:0] funct3;
     logic [4:0] rd;
-  } payload_r_t;
+} payload_r_t;
 
-  typedef struct packed {
+typedef struct packed {
     logic [11:0] imm;
     logic [4:0]  rs1;
     logic [2:0]  funct3;
     logic [4:0]  rd;
-  } payload_i_t;
+} payload_i_t;
 
-  typedef struct packed {
+typedef struct packed {
     logic [6:0] imm_11_5;
     logic [4:0] rs2;
     logic [4:0] rs1;
     logic [2:0] funct3;
     logic [4:0] imm_4_0;
-  } payload_s_t;
+} payload_s_t;
 
-  typedef struct packed {
+typedef struct packed {
     logic       imm_12;
     logic [5:0] imm_10_5;
     logic [4:0] rs2;
@@ -31,22 +31,22 @@ package core_pkg;
     logic [2:0] funct3;
     logic [3:0] imm_4_1;
     logic       imm_11;
-  } payload_b_t;
+} payload_b_t;
 
-  typedef struct packed {
+typedef struct packed {
     logic [19:0] imm_31_12;
     logic [4:0]  rd;
-  } payload_u_t;
+} payload_u_t;
 
-  typedef struct packed {
+typedef struct packed {
     logic       imm_20;
     logic [9:0] imm_10_1;
     logic       imm_11;
     logic [7:0] imm_19_12;
     logic [4:0] rd;
-  } payload_j_t;
+} payload_j_t;
 
-  typedef union packed {
+typedef union packed {
     payload_r_t r;
     payload_i_t i;
     payload_s_t s;
@@ -54,11 +54,23 @@ package core_pkg;
     payload_u_t u;
     payload_j_t j;
     logic [24:0] raw;
-  } payload_t;
+} payload_t;
 
-  typedef struct packed {
-    payload_t   payload;
-    logic [6:0] opcode;
-  } instruction_t;
+typedef enum logic [6:0] {
+    OP     = 7'b0110011,
+    OP_IMM = 7'b0010011,
+    LOAD   = 7'b0000011,
+    JALR   = 7'b1100111,
+    STORE  = 7'b0100011,
+    BRANCH = 7'b1100011,
+    LUI    = 7'b0110111,
+    AUIPC  = 7'b0010111,
+    JAL    = 7'b1101111
+} opcode_e;
+
+typedef struct packed {
+    payload_t payload;
+    opcode_e  opcode;
+} instruction_t;
 
 endpackage : core_pkg
