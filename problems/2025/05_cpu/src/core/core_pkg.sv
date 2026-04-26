@@ -1,5 +1,18 @@
 package core_pkg;
 
+typedef enum logic [3:0] {
+    ADD,
+    SUB,
+    SLL,
+    SLT,
+    SLTU,
+    XOR,
+    SRL,
+    SRA,
+    OR,
+    AND
+} alu_op_t;
+
 typedef struct packed {
     logic [6:0] funct7;
     logic [4:0] rs2;
