@@ -16,7 +16,13 @@ always_comb begin
                 3'b100:  o_alu_op = XOR;     // XORI
                 3'b110:  o_alu_op = OR;      // ORI
                 3'b111:  o_alu_op = AND;     // ANDI
+                3'b001:  o_alu_op = SLL;     // SLLI
+                3'b101:  o_alu_op = i_isntr.payload.i.imm_u.shift_op.funct7[5] ? SRA    // SRAI
+                                                                               : SRL;   // SRLI
             endcase
+        end
+        OP: begin
+            
         end
     endcase
 end
