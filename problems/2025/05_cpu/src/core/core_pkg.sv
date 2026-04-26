@@ -57,15 +57,15 @@ typedef union packed {
 } payload_t;
 
 typedef enum logic [6:0] {
-    OP     = 7'b0110011,
     OP_IMM = 7'b0010011,
-    LOAD   = 7'b0000011,
-    JALR   = 7'b1100111,
+    OP     = 7'b0110011,
     STORE  = 7'b0100011,
     BRANCH = 7'b1100011,
+    LOAD   = 7'b0000011,
+    JALR   = 7'b1100111,
+    JAL    = 7'b1101111,
     LUI    = 7'b0110111,
-    AUIPC  = 7'b0010111,
-    JAL    = 7'b1101111
+    AUIPC  = 7'b0010111
 } opcode_e;
 
 typedef struct packed {
