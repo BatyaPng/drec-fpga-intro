@@ -5,7 +5,8 @@ module core_control
 
     output alu_op_t o_alu_op,
     output mem_op_t o_mem_op,
-    output br_op_t  o_br_op
+    output br_op_t  o_br_op,
+    output logic o_jump
 );
 
 always_comb begin
@@ -62,6 +63,12 @@ always_comb begin
                 3'b100: o_mem_op = LBU; // LBU
                 3'b101: o_mem_op = LHU; // LHU
             endcase
+        end
+        JALR: begin
+            o_jump = 1'b1; // JALR;
+        end
+        JAL: begin
+            o_jump = 1'b1; // JAL
         end
     endcase
 end
