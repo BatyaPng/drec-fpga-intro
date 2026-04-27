@@ -54,6 +54,15 @@ always_comb begin
                 3'b111: o_br_op = BGEU; // BGEU
             endcase
         end
+        LOAD: begin
+            case (i_isntr.payload.i.funct3)
+                3'b000: o_mem_op = LB; // LB
+                3'b001: o_mem_op = LH; // LH
+                3'b010: o_mem_op = LW; // LW
+                3'b100: o_mem_op = LBU; // LBU
+                3'b101: o_mem_op = LHU; // LHU
+            endcase
+        end
     endcase
 end
 
