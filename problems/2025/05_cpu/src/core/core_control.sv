@@ -4,7 +4,8 @@ module core_control
     input  instruction_t i_isntr,
 
     output alu_op_t o_alu_op,
-    output mem_op_t o_mem_op
+    output mem_op_t o_mem_op,
+    output br_op_t  o_br_op
 );
 
 always_comb begin
@@ -41,6 +42,16 @@ always_comb begin
                 3'b000: o_mem_op = SB; // SB
                 3'b001: o_mem_op = SH; // SH
                 3'b010: o_mem_op = SW; // SW
+            endcase
+        end
+        BRANCH: begin
+            case (i_isntr.payload.b.funct3)
+                3'b000: o_br_op = BEQ; // BEQ
+                3'b001: o_br_op = BNE; // BNE
+                3'b100: o_br_op = BLT; // BLT
+                3'b101: o_br_op = BGE; // BGE
+                3'b110: o_br_op = BLTU; // BLTU
+                3'b111: o_br_op = BGEU; // BGEU
             endcase
         end
     endcase
