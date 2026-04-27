@@ -13,6 +13,17 @@ typedef enum logic [3:0] {
     AND
 } alu_op_t;
 
+typedef enum logic [2:0] {
+    SB,
+    SH,
+    SW,
+    LB,
+    LH,
+    LW,
+    LBU,
+    LHU
+} mem_op_t;
+
 typedef struct packed {
     logic [6:0] funct7;
     logic [4:0] rs2;

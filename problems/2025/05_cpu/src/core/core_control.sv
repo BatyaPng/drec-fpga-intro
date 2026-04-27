@@ -3,7 +3,8 @@ module core_control
 (
     input  instruction_t i_isntr,
 
-    output alu_op_t o_alu_op
+    output alu_op_t o_alu_op,
+    output mem_op_t o_mem_op
 );
 
 always_comb begin
@@ -33,6 +34,13 @@ always_comb begin
                                                                 : SRA; // SRA
                 3'b110: o_alu_op = OR; // OR
                 3'b111: o_alu_op = AND; // AND
+            endcase
+        end
+        STORE: begin
+            case (i_isntr.payload.s.funct3)
+                3'b000: o_mem_op = SB; // SB
+                3'b001: o_mem_op = SH; // SH
+                3'b010: o_mem_op = SW; // SW
             endcase
         end
     endcase
