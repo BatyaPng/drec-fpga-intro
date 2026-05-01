@@ -3,11 +3,11 @@ module sign_extender
 (
     input  instruction_t i_instr,
 
-    output logic [31:0]  o_i_imm,
-    output logic [31:0]  o_s_imm,
-    output logic [31:0]  o_b_imm,
-    output logic [31:0]  o_u_imm,
-    output logic [31:0]  o_j_imm
+    output logic [31:0] o_i_imm,
+    output logic [31:0] o_s_imm,
+    output logic [31:0] o_b_imm,
+    output logic [31:0] o_u_imm,
+    output logic [31:0] o_j_imm
 );
 
     assign o_i_imm = {{20{i_instr.payload.i.imm[11]}}, i_instr.payload.i.imm};
