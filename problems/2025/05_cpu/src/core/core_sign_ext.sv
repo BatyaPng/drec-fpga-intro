@@ -10,7 +10,7 @@ module sign_extender
     output logic [31:0] o_j_imm
 );
 
-    assign o_i_imm = {{20{i_instr.payload.i.imm[11]}}, i_instr.payload.i.imm};
+    assign o_i_imm = {{20{i_instr.payload.i.imm_u.imm_11_0[11]}}, i_instr.payload.i.imm_u.imm_11_0};
 
     assign o_s_imm = {{20{i_instr.payload.s.imm_11_5[6]}}, i_instr.payload.s.imm_11_5, i_instr.payload.s.imm_4_0};
 
