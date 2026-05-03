@@ -6,7 +6,7 @@ module core_pc (
     input  logic [31:0] i_branch_addr,
 
     output logic [31:0] o_pc,
-    output logic [31:0] o_pc_next
+    output logic [31:0] o_pc_inc
 );
 
 logic [31:0] pc_next;
@@ -20,7 +20,7 @@ always_ff @(posedge clk or negedge rst_n)
     else
         pc_ff <= pc_next;
 
-assign o_pc      = pc_ff;
-assign o_pc_next = pc_next;
+assign o_pc     = pc_ff;
+assign o_pc_inc = pc_ff + 4;
 
 endmodule
