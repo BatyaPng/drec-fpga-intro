@@ -1,4 +1,4 @@
-module alu
+module core_alu
     import core_pkg::*;
 (
     input  wire [31:0] i_a,
