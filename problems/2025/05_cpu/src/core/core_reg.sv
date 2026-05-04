@@ -15,7 +15,7 @@ module core_reg (
 logic              reg_en;
 logic [31:0][31:0] reg_ff;
 
-assign reg_en = i_dst != 0;
+assign reg_en = i_rd != 0;
 
 always_ff @(posedge clk or negedge rst_n)
     if (!rst_n)
