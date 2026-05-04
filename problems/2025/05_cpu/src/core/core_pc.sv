@@ -9,10 +9,10 @@ module core_pc (
     output logic [31:0] o_pc_inc
 );
 
-logic [31:0] pc_next;
-logic [31:0] pc_ff;
+logic [29:0] pc_next;
+logic [29:0] pc_ff;
 
-assign pc_next = i_branch ? i_branch_addr : pc_ff + 4;
+assign pc_next = i_branch ? i_branch_addr[31:2] : pc_ff + 1;
 
 always_ff @(posedge clk or negedge rst_n)
     if (!rst_n)
@@ -20,7 +20,7 @@ always_ff @(posedge clk or negedge rst_n)
     else
         pc_ff <= pc_next;
 
-assign o_pc     = pc_ff;
-assign o_pc_inc = pc_ff + 4;
+assign o_pc     = {pc_ff, 2'b0};
+assign o_pc_inc = {pc_ff + 1'b1, 2'b0};
 
 endmodule
