@@ -41,9 +41,9 @@ fpga:
 	quartus_pgm -c "USB-Blaster" -m JTAG -o "p;output/fpga.sof"
 
 work:
-	vlib work
+	if [ ! -d "work" ]; then vlib work; fi
 
-cpu_top: work $(TB_LIST) $(RTL_LIST)
+cpu_top: work samples $(TB_LIST) $(RTL_LIST)
 	vlog -sv +incdir+./src $(TB_LIST) $(RTL_LIST)
 
 run_cpu_top: cpu_top
