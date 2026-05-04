@@ -47,10 +47,10 @@ cpu_top: work samples $(TB_LIST) $(RTL_LIST)
 	vlog -sv +incdir+./src $(TB_LIST) $(RTL_LIST)
 
 run_cpu_top: cpu_top
-	vsim -c work.cpu_top_tb -do "run -all; quit"
+	vsim -c -voptargs="+acc" work.cpu_top_tb -do "run -all; quit"
 
 gui_cpu_top: cpu_top
-	vsim work.cpu_top_tb -do "add wave -r /*; run -all"
+	vsim -voptargs="+acc" work.cpu_top_tb -do "add wave -r /*; run -all"
 
 clean:
 	rm -rf sim dump.vcd
