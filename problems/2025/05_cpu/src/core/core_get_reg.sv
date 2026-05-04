@@ -10,6 +10,6 @@ module core_get_reg
 
 assign o_rs1 = i_instr[19:15];
 assign o_rs2 = i_instr[24:20];
-assign o_rd  = i_instr[11:7];
+assign o_rd  = (i_instr.opcode != STORE & i_instr.opcode != BRANCH) ? i_instr[11:7] : '0;
 
 endmodule
