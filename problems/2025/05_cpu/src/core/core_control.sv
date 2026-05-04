@@ -19,8 +19,8 @@ always_comb begin
     o_alu_op   = alu_op_t'('X);
     o_mem_op   = mem_op_t'('X);
     o_br_op    = br_op_t'('X);
-    o_branch   = 1'bX;
-    o_jump     = 1'bX;
+    o_branch   = 1'b0;
+    o_jump     = 1'b0;
     o_wb_sel   = 2'hX;
 
     case (i_isntr.opcode)
@@ -70,8 +70,9 @@ always_comb begin
                 3'b010:  o_mem_op = SW;                                                // SW
                 default: o_mem_op = mem_op_t'('X);
             endcase
-            o_alu_sel1 = 2'h3;
-            o_alu_sel2 = 2'h2;
+            o_alu_sel1 = 2'h0;
+            o_alu_sel2 = 2'h1;
+            o_alu_op   = ADD;
             o_wb_sel   = 2'h1;
             o_branch   = 1'b0;
             o_jump     = 1'b0;
@@ -86,8 +87,9 @@ always_comb begin
                 3'b111:  o_br_op = BGEU;                                               // BGEU
                 default: o_br_op = br_op_t'('X);
             endcase
-            o_alu_sel1 = 2'h1;
-            o_alu_sel2 = 2'h3;
+            o_alu_sel1 = 2'h2;
+            o_alu_sel2 = 2'h0;
+            o_alu_op   = ADD;
             o_wb_sel   = 2'h1;
             o_branch   = 1'b1;
             o_jump     = 1'b0;
@@ -101,37 +103,41 @@ always_comb begin
                 3'b101:  o_mem_op = LHU;                                               // LHU
                 default: o_mem_op = mem_op_t'('X);
             endcase
-            o_alu_sel1 = 2'hX;
-            o_alu_sel2 = 2'hX;
-            o_wb_sel   = 2'h2;
+            o_alu_sel1 = 2'h0;
+            o_alu_sel2 = 2'h2;
+            o_alu_op   = ADD;
+            o_wb_sel   = 2'h1;
             o_branch   = 1'b0;
             o_jump     = 1'b0;
         end
         JALR: begin                                                                    // JALR;
-            o_alu_sel1 = 2'hX;
-            o_alu_sel2 = 2'hX;
-            o_wb_sel   = 2'h3;
+            o_alu_sel1 = 2'h0;
+            o_alu_sel2 = 2'h2;
+            o_alu_op   = ADD;
+            o_wb_sel   = 2'h0;
             o_branch   = 1'b0;
             o_jump     = 1'b1;
         end
         JAL: begin                                                                     // JAL
-            o_alu_sel1 = 2'hX;
-            o_alu_sel2 = 2'hX;
-            o_wb_sel   = 2'h3;
+            o_alu_sel1 = 2'h1;
+            o_alu_sel2 = 2'h0;
+            o_alu_op   = ADD;
+            o_wb_sel   = 2'h0;
             o_branch   = 1'b0;
             o_jump     = 1'b1;
         end
         LUI: begin                                                                     // LUI
             o_alu_sel1 = 2'hX;
             o_alu_sel2 = 2'hX;
-            o_wb_sel   = 2'h0;
+            o_wb_sel   = 2'h3;
             o_branch   = 1'b0;
             o_jump     = 1'b0;
         end
         AUIPC: begin                                                                   // AUIPC
-            o_alu_sel1 = 2'h0;
-            o_alu_sel2 = 2'h3;
-            o_wb_sel   = 2'h1;
+            o_alu_sel1 = 2'h3;
+            o_alu_sel2 = 2'h0;
+            o_alu_op   = ADD;
+            o_wb_sel   = 2'h3;
             o_branch   = 1'b0;
             o_jump     = 1'b0;
         end
