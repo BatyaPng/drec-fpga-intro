@@ -1,4 +1,4 @@
-module sign_extender
+module core_sign_ext
     import core_pkg::*;
 (
     input  instruction_t i_instr,
