@@ -9,16 +9,23 @@ module hex_display #(
     output reg  [7:0]  o_segments
 );
 
+reg [15:0] data_ff;
+
+always @(posedge clk) begin
+    if (i_we)
+        data_ff <= i_data;
+end
+
 reg [CNT_WIDTH-1:0] cnt;
 wire          [1:0] pos = cnt[CNT_WIDTH-1:CNT_WIDTH-2];
 
 reg [3:0] hex_digit;
 always @(*) begin
     case (pos)
-        2'b00: hex_digit = i_data[3:0];
-        2'b01: hex_digit = i_data[7:4];
-        2'b10: hex_digit = i_data[11:8];
-        2'b11: hex_digit = i_data[15:12];
+        2'b00: hex_digit = data_ff[3:0];
+        2'b01: hex_digit = data_ff[7:4];
+        2'b10: hex_digit = data_ff[11:8];
+        2'b11: hex_digit = data_ff[15:12];
     endcase
 end
 
@@ -33,23 +40,23 @@ assign o_anodes = ~(4'b1 << pos);
 
 always @(*) begin
     case (hex_digit)
-        4'h0:    o_segments = i_we ? 8'b11111100 : 8'b00000001;
-        4'h1:    o_segments = i_we ? 8'b01100000 : 8'b00000001;
-        4'h2:    o_segments = i_we ? 8'b11011010 : 8'b00000001;
-        4'h3:    o_segments = i_we ? 8'b11110010 : 8'b00000001;
-        4'h4:    o_segments = i_we ? 8'b01100110 : 8'b00000001;
-        4'h5:    o_segments = i_we ? 8'b10110110 : 8'b00000001;
-        4'h6:    o_segments = i_we ? 8'b10111110 : 8'b00000001;
-        4'h7:    o_segments = i_we ? 8'b11100000 : 8'b00000001;
-        4'h8:    o_segments = i_we ? 8'b11111110 : 8'b00000001;
-        4'h9:    o_segments = i_we ? 8'b11110110 : 8'b00000001;
-        4'hA:    o_segments = i_we ? 8'b11101110 : 8'b00000001;
-        4'hB:    o_segments = i_we ? 8'b00111110 : 8'b00000001;
-        4'hC:    o_segments = i_we ? 8'b10011100 : 8'b00000001;
-        4'hD:    o_segments = i_we ? 8'b01111010 : 8'b00000001;
-        4'hE:    o_segments = i_we ? 8'b10011110 : 8'b00000001;
-        4'hF:    o_segments = i_we ? 8'b10001110 : 8'b00000001;
-        default: o_segments = i_we ? 8'b00000000 : 8'b00000001;
+        4'h0:    o_segments = 8'b11111100;
+        4'h1:    o_segments = 8'b01100000;
+        4'h2:    o_segments = 8'b11011010;
+        4'h3:    o_segments = 8'b11110010;
+        4'h4:    o_segments = 8'b01100110;
+        4'h5:    o_segments = 8'b10110110;
+        4'h6:    o_segments = 8'b10111110;
+        4'h7:    o_segments = 8'b11100000;
+        4'h8:    o_segments = 8'b11111110;
+        4'h9:    o_segments = 8'b11110110;
+        4'hA:    o_segments = 8'b11101110;
+        4'hB:    o_segments = 8'b00111110;
+        4'hC:    o_segments = 8'b10011100;
+        4'hD:    o_segments = 8'b01111010;
+        4'hE:    o_segments = 8'b10011110;
+        4'hF:    o_segments = 8'b10001110;
+        default: o_segments = 8'b00000001;
     endcase
 end
 
