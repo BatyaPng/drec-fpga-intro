@@ -9,7 +9,7 @@ module mmio_xbar (
     output wire        o_hexd_wren
 );
 
-assign is_hexd_addr = (i_mmio_addr == (32'h20) >> 2);
+wire is_hexd_addr = (i_mmio_addr == (32'h20) >> 2);
 
 assign o_hexd_wren = is_hexd_addr && i_mmio_wren;
 assign o_hexd_data = i_mmio_data[15:0];
