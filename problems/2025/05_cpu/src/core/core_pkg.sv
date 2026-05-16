@@ -41,6 +41,17 @@ typedef struct packed {
     logic [4:0] rd;
 } payload_r_t;
 
+`ifdef FPGA
+
+typedef struct packed {
+    logic [11:0] imm_11_0;
+    logic [4:0]  rs1;
+    logic [2:0]  funct3;
+    logic [4:0]  rd;
+} payload_i_t;
+
+`else
+
 typedef struct packed {
     union packed {
         logic [11:0] imm_11_0;
@@ -54,6 +65,8 @@ typedef struct packed {
     logic [4:0]  rd;
 } payload_i_t;
 
+`endif
+
 typedef struct packed {
     logic [6:0] imm_11_5;
     logic [4:0] rs2;
@@ -63,13 +76,13 @@ typedef struct packed {
 } payload_s_t;
 
 typedef struct packed {
-    logic       imm_12;
+    logic        imm_12;
     logic [5:0] imm_10_5;
     logic [4:0] rs2;
     logic [4:0] rs1;
     logic [2:0] funct3;
     logic [3:0] imm_4_1;
-    logic       imm_11;
+    logic        imm_11;
 } payload_b_t;
 
 typedef struct packed {
@@ -78,12 +91,17 @@ typedef struct packed {
 } payload_u_t;
 
 typedef struct packed {
-    logic       imm_20;
-    logic [9:0] imm_10_1;
-    logic       imm_11;
-    logic [7:0] imm_19_12;
-    logic [4:0] rd;
+    logic        imm_20;
+    logic [9:0]  imm_10_1;
+    logic        imm_11;
+    logic [7:0]  imm_19_12;
+    logic [4:0]  rd;
 } payload_j_t;
+
+`ifdef FPGA
+
+typedef logic [24:0] payload_t;
+`else
 
 typedef union packed {
     payload_r_t r;
@@ -94,6 +112,8 @@ typedef union packed {
     payload_j_t j;
     logic [24:0] raw;
 } payload_t;
+
+`endif
 
 typedef enum logic [6:0] {
     OP_IMM = 7'b0010011,
