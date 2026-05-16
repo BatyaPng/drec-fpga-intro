@@ -62,6 +62,19 @@ set_global_assignment -name VERILOG_FILE src/lsu.v
 set_global_assignment -name VERILOG_FILE src/hex_display.v
 set_global_assignment -name VERILOG_FILE src/mmio_xbar.v
 set_global_assignment -name VERILOG_FILE src/ctrl_74hc595.v
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_pkg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_and.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_bru.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_control.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_get_reg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_lsu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_mux4.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_or.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_pc.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_reg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_sign_ext.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core.sv
 
 # Pin & Location Assignments
 # ==========================
