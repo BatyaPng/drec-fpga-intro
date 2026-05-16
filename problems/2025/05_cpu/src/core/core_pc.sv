@@ -17,7 +17,7 @@ assign pc_next = i_branch ? i_branch_addr[31:2] : pc_ff + 1;
 
 always_ff @(posedge clk or negedge rst_n)
     if (!rst_n)
-        pc_ff <= 32'h1000;
+        pc_ff <= (32'h1000) >> 2;
     else
         pc_ff <= pc_next;
 
