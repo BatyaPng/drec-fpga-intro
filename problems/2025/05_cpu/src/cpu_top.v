@@ -76,7 +76,7 @@ mem_xbar(
 core core(
     .clk           (clk             ),
     .rst_n         (rst_n           ),
-    .i_instr_data  (imem2core_data  ),
+    .i_raw_instr   (imem2core_data  ),
     .o_instr_addr  (core2imem_addr  ),
     .o_mem_addr    (core2xbar_addr  ),
     .o_mem_data    (core2xbar_data  ),

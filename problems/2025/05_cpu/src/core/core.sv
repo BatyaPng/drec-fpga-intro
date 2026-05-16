@@ -4,8 +4,8 @@ module core
     input  logic clk,
     input  logic rst_n,
 
-    input  instruction_t i_instr_data,
-    output logic [29:0]  o_instr_addr,
+    input  logic [31:0] i_raw_instr,
+    output logic [29:0] o_instr_addr,
 
     output logic [29:0] o_mem_addr,
     output logic [31:0] o_mem_data,
@@ -13,6 +13,9 @@ module core
     output logic [3:0]  o_mem_mask,
     input  logic [31:0] i_mem_data
 );
+
+instruction_t instr_data;
+assign instr_data = i_raw_instr;
 
 logic [31:0] i_imm;
 logic [31:0] s_imm;
@@ -65,14 +68,14 @@ core_pc core_pc (
 );
 
 core_get_reg core_get_reg (
-    .i_instr (i_instr_data),
+    .i_instr (instr_data  ),
     .o_rs1   (rs1         ),
     .o_rs2   (rs2         ),
     .o_rd    (rd          )
 );
 
 core_sign_ext core_sign_ext (
-    .i_instr (i_instr_data),
+    .i_instr (instr_data  ),
     .o_i_imm (i_imm       ),
     .o_s_imm (s_imm       ),
     .o_b_imm (b_imm       ),
@@ -95,7 +98,7 @@ core_reg core_reg (
 );
 
 core_control core_control (
-    .i_isntr     (i_instr_data),
+    .i_isntr     (instr_data  ),
 
     .o_alu_sel_a (o_alu_sel_a ),
     .o_alu_sel_b (o_alu_sel_b ),
