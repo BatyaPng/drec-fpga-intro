@@ -24,8 +24,8 @@ logic [31:0] alu_a;
 logic [31:0] alu_b;
 logic [31:0] alu_res;
 
-logic [1:0] alu_sel1;
-logic [1:0] alu_sel2;
+logic [1:0] o_alu_sel_b;
+logic [1:0] o_alu_sel_a;
 alu_op_t    alu_op;
 mem_op_t    mem_op;
 br_op_t     br_op;
@@ -95,38 +95,38 @@ core_reg core_reg (
 );
 
 core_control core_control (
-    .i_isntr    (i_instr_data),
+    .i_isntr     (i_instr_data),
 
-    .o_alu_sel1 (alu_sel1    ),
-    .o_alu_sel2 (alu_sel2    ),
-    .o_alu_op   (alu_op      ),
-    .o_mem_op   (mem_op      ),
-    .o_br_op    (br_op       ),
-    .o_branch   (branch      ),
-    .o_jump     (jump        ),
-    .o_wb_sel   (wb_sel      )
+    .o_alu_sel_a (o_alu_sel_a ),
+    .o_alu_sel_b (o_alu_sel_b ),
+    .o_alu_op    (alu_op      ),
+    .o_mem_op    (mem_op      ),
+    .o_br_op     (br_op       ),
+    .o_branch    (branch      ),
+    .o_jump      (jump        ),
+    .o_wb_sel    (wb_sel      )
 );
 
 core_mux4 mux_alu_a (
-    .i_sel  (alu_sel1),
+    .i_sel  (o_alu_sel_a),
 
     .i_data ({u_imm,
              b_imm,
              j_imm,
-             src1}   ),
+             src1}      ),
 
-    .o_data (alu_a   )
+    .o_data (alu_a      )
 );
 
 core_mux4 mux_alu_b (
-    .i_sel  (alu_sel2),
+    .i_sel  (o_alu_sel_b),
 
     .i_data ({src2,
              i_imm,
              s_imm,
-             pc}     ),
+             pc}        ),
 
-    .o_data (alu_b   )
+    .o_data (alu_b      )
 );
 
 core_alu core_alu (
