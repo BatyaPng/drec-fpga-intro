@@ -23,7 +23,7 @@ always @(posedge clk) begin
     data <= i_data;
 end
 
-always @(addr, we, mask, data) begin
+always @(posedge clk) begin
     if (we) begin
         if (mask[0])
             mem[addr][7:0]   = data[7:0];

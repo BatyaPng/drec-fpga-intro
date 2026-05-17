@@ -103,17 +103,19 @@ core_and load_and (
 );
 
 core_reg core_reg (
-    .clk    (clk  ),
-    .rst_n  (rst_n),
+    .clk       (clk    ),
+    .rst_n     (rst_n  ),
 
-    .i_rs1  (rs1  ),
-    .i_rs2  (rs2  ),
+    .i_is_load (is_load),
 
-    .i_dst  (dst  ),
-    .i_rd   (rd   ),
+    .i_rs1     (rs1    ),
+    .i_rs2     (rs2    ),
 
-    .o_src1 (src1 ),
-    .o_src2 (src2 )
+    .i_dst     (dst    ),
+    .i_rd      (rd     ),
+
+    .o_src1    (src1   ),
+    .o_src2    (src2   )
 );
 
 core_control core_control (

@@ -2,6 +2,8 @@ module core_reg (
     input  logic clk,
     input  logic rst_n,
 
+    input  logic i_is_load,
+
     input  logic [4:0] i_rs1,
     input  logic [4:0] i_rs2,
 
@@ -15,7 +17,7 @@ module core_reg (
 logic              reg_en;
 logic [31:0][31:0] reg_ff;
 
-assign reg_en = i_rd != 0;
+assign reg_en = (i_rd != 0) && !i_is_load;
 
 always_ff @(posedge clk or negedge rst_n)
     if (!rst_n)
