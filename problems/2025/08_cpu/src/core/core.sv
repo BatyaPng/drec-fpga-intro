@@ -20,7 +20,8 @@ assign instr_data = i_raw_instr;
 logic [31:0] i_imm;
 logic [31:0] s_imm;
 logic [31:0] b_imm;
-logic [31:0] u_imm;
+logic [31:0] u_imm_0;
+logic [31:0] u_imm_1;
 logic [31:0] j_imm;
 
 logic [31:0] alu_a;
@@ -61,7 +62,7 @@ logic [31:0] dst;
 logic  [4:0] rd_0;
 logic  [4:0] rd_1;
 
-localparam WIDTH_RS = $size(wb_sel_0) + $size(pc_inc_0) + $size(alu_res_0) + $size(rd_0);
+localparam WIDTH_RS = $size(wb_sel_0) + $size(pc_inc_0) + $size(u_imm_0) + $size(alu_res_0) + $size(rd_0);
 
 core_pc core_pc (
     .clk           (clk         ),
@@ -87,7 +88,7 @@ core_sign_ext core_sign_ext (
     .o_i_imm (i_imm       ),
     .o_s_imm (s_imm       ),
     .o_b_imm (b_imm       ),
-    .o_u_imm (u_imm       ),
+    .o_u_imm (u_imm_0     ),
     .o_j_imm (j_imm       )
 );
 
@@ -121,7 +122,7 @@ core_control core_control (
 core_mux4 mux_alu_a (
     .i_sel  (o_alu_sel_a),
 
-    .i_data ({u_imm,
+    .i_data ({u_imm_0,
              b_imm,
              j_imm,
              src1}      ),
@@ -180,11 +181,13 @@ core_rs_gen #(
 
     .i_data ({wb_sel_0,
               pc_inc_0,
+              u_imm_0,
               alu_res_0,
               rd_0}),
 
     .o_data ({wb_sel_1,
               pc_inc_1,
+              u_imm_1,
               alu_res_1,
               rd_1})
 );
@@ -205,7 +208,7 @@ core_lsu core_lsu(
 
 core_mux4 mux_wb (
     .i_sel  (wb_sel_1 ),
-    .i_data ({u_imm,
+    .i_data ({u_imm_1,
              alu_res_1,
              lsu_data,
              pc_inc_1}),

@@ -15,6 +15,9 @@ module core_reg (
 logic              reg_en;
 logic [31:0][31:0] reg_ff;
 
+logic bypass_1;
+logic bypass_2;
+
 assign reg_en = i_rd != 0;
 
 always_ff @(posedge clk or negedge rst_n)
@@ -23,7 +26,10 @@ always_ff @(posedge clk or negedge rst_n)
     else if (reg_en)
         reg_ff[i_rd] <= i_dst;
 
-assign o_src1 = reg_ff[i_rs1];
-assign o_src2 = reg_ff[i_rs2];
+assign bypass_1 = (i_rs1 == i_rd) && reg_en;
+assign bypass_2 = (i_rs2 == i_rd) && reg_en;
+
+assign o_src1 = bypass_1 ? i_dst : reg_ff[i_rs1];
+assign o_src2 = bypass_2 ? i_dst : reg_ff[i_rs2];
 
 endmodule
