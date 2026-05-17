@@ -3,7 +3,6 @@ module core_pc (
     input  logic rst_n,
 
     input  logic        i_branch,
-    input  logic        i_load,
     input  logic [31:0] i_branch_addr,
 
     output logic [29:0] o_instr_addr,
@@ -14,9 +13,7 @@ module core_pc (
 logic [29:0] pc_next;
 logic [29:0] pc_ff;
 
-assign pc_next = i_load ? pc_ff
-                        : i_branch ? i_branch_addr[31:2]
-                                   : pc_ff + 1;
+assign pc_next = i_branch ? i_branch_addr[31:2] : pc_ff + 1;
 
 always_ff @(posedge clk or negedge rst_n)
     if (!rst_n)
