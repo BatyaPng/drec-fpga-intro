@@ -4,6 +4,8 @@ module mem_xbar #(
     parameter MMIO_START = 30'h0000,
     parameter MMIO_LIMIT = 30'h03FF
 )(
+    input  wire        clk,
+
     input  wire [29:0] i_addr,
     input  wire [31:0] i_data,
     input  wire        i_wren,
@@ -23,11 +25,20 @@ module mem_xbar #(
     input  wire [31:0] i_mmio_data
 );
 
-    wire is_dmem;
-    wire is_mmio;
+    wire is_dmem_next;
+    wire is_mmio_next;
 
-    assign is_dmem = (i_addr >= DATA_START) && (i_addr <= DATA_LIMIT);
-    assign is_mmio = (i_addr >= MMIO_START) && (i_addr <= MMIO_LIMIT);
+    reg  is_dmem_ff;
+    reg  is_mmio_ff;
+
+    assign is_dmem_next = (i_addr >= DATA_START) && (i_addr <= DATA_LIMIT);
+    assign is_mmio_next = (i_addr >= MMIO_START) && (i_addr <= MMIO_LIMIT);
+
+    always @(posedge clk)
+        is_dmem_ff <= is_dmem_next;
+
+    always@(posedge clk)
+        is_mmio_ff <= is_mmio_next;
 
     assign o_dmem_addr = i_addr;
     assign o_mmio_addr = i_addr;
@@ -38,9 +49,11 @@ module mem_xbar #(
     assign o_dmem_mask = i_mask;
     assign o_mmio_mask = i_mask;
 
-    assign o_dmem_wren = i_wren & is_dmem;
-    assign o_mmio_wren = i_wren & is_mmio;
+    assign o_dmem_wren = i_wren & is_dmem_ff;
+    assign o_mmio_wren = i_wren & is_mmio_ff;
 
-    assign o_data = is_dmem ? i_dmem_data : (is_mmio ? i_mmio_data : 32'b0);
+    assign o_data = is_dmem_ff ? i_dmem_data
+                               : is_mmio_ff ? i_mmio_data
+                                            : 32'b0;
 
 endmodule
