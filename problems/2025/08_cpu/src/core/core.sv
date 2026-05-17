@@ -25,7 +25,8 @@ logic [31:0] j_imm;
 
 logic [31:0] alu_a;
 logic [31:0] alu_b;
-logic [31:0] alu_res;
+logic [31:0] alu_res_0;
+logic [31:0] alu_res_1;
 
 logic [1:0] o_alu_sel_b;
 logic [1:0] o_alu_sel_a;
@@ -37,7 +38,8 @@ br_op_t     br_op;
 logic       branch;
 logic       jump;
 
-logic [1:0] wb_sel;
+logic [1:0] wb_sel_0;
+logic [1:0] wb_sel_1;
 
 logic [31:0] lsu_data;
 
@@ -46,7 +48,8 @@ logic branch_taken;
 logic taken;
 
 logic [31:0] pc;
-logic [31:0] pc_inc;
+logic [31:0] pc_inc_0;
+logic [31:0] pc_inc_1;
 
 logic [4:0] rs1;
 logic [4:0] rs2;
@@ -55,25 +58,28 @@ logic [31:0] src1;
 logic [31:0] src2;
 
 logic [31:0] dst;
-logic  [4:0] rd;
+logic  [4:0] rd_0;
+logic  [4:0] rd_1;
+
+localparam WIDTH_RS = $size(wb_sel_0) + $size(pc_inc_0) + $size(alu_res_0) + $size(rd_0);
 
 core_pc core_pc (
     .clk           (clk         ),
     .rst_n         (rst_n       ),
 
     .i_branch      (taken       ),
-    .i_branch_addr (alu_res     ),
+    .i_branch_addr (alu_res_0   ),
 
     .o_instr_addr  (o_instr_addr),
     .o_pc          (pc          ),
-    .o_pc_inc      (pc_inc      )
+    .o_pc_inc      (pc_inc_0    )
 );
 
 core_get_reg core_get_reg (
     .i_instr (instr_data  ),
     .o_rs1   (rs1         ),
     .o_rs2   (rs2         ),
-    .o_rd    (rd          )
+    .o_rd    (rd_0        )
 );
 
 core_sign_ext core_sign_ext (
@@ -93,7 +99,7 @@ core_reg core_reg (
     .i_rs2  (rs2  ),
 
     .i_dst  (dst  ),
-    .i_rd   (rd   ),
+    .i_rd   (rd_1 ),
 
     .o_src1 (src1 ),
     .o_src2 (src2 )
@@ -109,7 +115,7 @@ core_control core_control (
     .o_br_op     (br_op       ),
     .o_branch    (branch      ),
     .o_jump      (jump        ),
-    .o_wb_sel    (wb_sel      )
+    .o_wb_sel    (wb_sel_0    )
 );
 
 core_mux4 mux_alu_a (
@@ -140,7 +146,7 @@ core_alu core_alu (
 
     .i_op  (alu_op ),
 
-    .o_res (alu_res)
+    .o_res (alu_res_0)
 );
 
 core_bru core_bru (
@@ -166,26 +172,43 @@ core_or jmp_or (
     .o_c (taken       )
 );
 
+core_rs_gen #(
+    .WIDTH(WIDTH_RS)
+ ) core_rs_gen (
+    .clk    (clk),
+    .rst_n  (rst_n),
+
+    .i_data ({wb_sel_0,
+              pc_inc_0,
+              alu_res_0,
+              rd_0}),
+
+    .o_data ({wb_sel_1,
+              pc_inc_1,
+              alu_res_1,
+              rd_1})
+);
+
 core_lsu core_lsu(
-    .i_addr          (alu_res[31:2]),
-    .i_mem_op        (mem_op       ),
-    .i_data_core2mem (src2         ),
-    .i_data_mem2core (i_mem_data   ),
+    .i_addr          (alu_res_0[31:2]),
+    .i_mem_op        (mem_op         ),
+    .i_data_core2mem (src2           ),
+    .i_data_mem2core (i_mem_data     ),
 
-    .o_core2mem_addr (o_mem_addr   ),
-    .o_core2mem_data (o_mem_data   ),
-    .o_core2mem_we   (o_mem_we     ),
-    .o_core2mem_mask (o_mem_mask   ),
+    .o_core2mem_addr (o_mem_addr     ),
+    .o_core2mem_data (o_mem_data     ),
+    .o_core2mem_we   (o_mem_we       ),
+    .o_core2mem_mask (o_mem_mask     ),
 
-    .o_mem2core_data (lsu_data     )
+    .o_mem2core_data (lsu_data       )
 );
 
 core_mux4 mux_wb (
-    .i_sel  (wb_sel ),
+    .i_sel  (wb_sel_1 ),
     .i_data ({u_imm,
-             alu_res,
+             alu_res_1,
              lsu_data,
-             pc_inc}),
+             pc_inc_1}),
 
     .o_data (dst    )
 );
