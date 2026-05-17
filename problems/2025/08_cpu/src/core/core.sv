@@ -6,7 +6,6 @@ module core
 
     input  logic [31:0] i_raw_instr,
     output logic [29:0] o_instr_addr,
-    output logic        o_instr_stall,
 
     output logic [29:0] o_mem_addr,
     output logic [31:0] o_mem_data,
