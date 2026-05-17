@@ -31,6 +31,9 @@ logic [1:0] o_alu_sel_b;
 logic [1:0] o_alu_sel_a;
 alu_op_t    alu_op;
 mem_op_t    mem_op;
+logic       mem_load;
+logic       is_load;
+logic       mem_out;
 br_op_t     br_op;
 logic       branch;
 logic       jump;
@@ -60,6 +63,7 @@ core_pc core_pc (
     .rst_n         (rst_n       ),
 
     .i_branch      (taken       ),
+    .i_load        (is_load     ),
     .i_branch_addr (alu_res     ),
 
     .o_instr_addr  (o_instr_addr),
@@ -83,6 +87,21 @@ core_sign_ext core_sign_ext (
     .o_j_imm (j_imm       )
 );
 
+core_mem_out core_mem_out (
+    .clk        (clk    ),
+    .rst_n      (rst_n  ),
+
+    .i_mem_load (is_load),
+    .o_mem_out  (mem_out)
+);
+
+core_and load_and (
+    .i_a (mem_load),
+    .i_b (!mem_out),
+
+    .o_c (is_load )
+);
+
 core_reg core_reg (
     .clk    (clk  ),
     .rst_n  (rst_n),
@@ -104,6 +123,7 @@ core_control core_control (
     .o_alu_sel_b (o_alu_sel_b ),
     .o_alu_op    (alu_op      ),
     .o_mem_op    (mem_op      ),
+    .o_mem_load  (mem_load    ),
     .o_br_op     (br_op       ),
     .o_branch    (branch      ),
     .o_jump      (jump        ),

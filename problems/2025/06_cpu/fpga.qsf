@@ -73,6 +73,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_or.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_pc.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_reg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_sign_ext.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_mem_out.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core.sv
 set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 

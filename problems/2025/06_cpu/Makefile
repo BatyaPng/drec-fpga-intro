@@ -13,6 +13,7 @@ RTL_LIST := \
 	src/core/core_pc.sv \
 	src/core/core_reg.sv \
 	src/core/core_sign_ext.sv \
+	src/core/core_mem_out.sv \
 	src/core/core.sv \
 	src/imem.v \
 	src/dmem.v \
