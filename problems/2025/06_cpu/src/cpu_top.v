@@ -50,7 +50,7 @@ mem_xbar #(
     .MMIO_LIMIT    (`XBAR_MMIO_LIMIT)
 )
 mem_xbar(
-    // .clk           (clk             ),
+    .clk           (clk             ),
 
     .i_addr        (core2xbar_addr  ),
     .i_data        (core2xbar_data  ),
