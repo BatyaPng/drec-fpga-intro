@@ -1,7 +1,7 @@
 `include "config.vh"
 
 module imem(
-    input  wire         clk,  
+    input  wire         clk,
     input  wire         rst_n,
 
     input  wire   [7:0] i_addr,
@@ -10,7 +10,7 @@ module imem(
 
 wire rst = ~rst_n;
 
-`ifdef __ICARUS__
+`ifndef FPGA
 
 reg  [31:0] mem [0:255];
 reg   [7:0] addr_d;

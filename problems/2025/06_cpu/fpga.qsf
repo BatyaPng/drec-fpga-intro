@@ -163,3 +163,5 @@ set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_
 
 # end ENTITY(fpga_top)
 # --------------------
+
+set_global_assignment -name VERILOG_MACRO "FPGA"

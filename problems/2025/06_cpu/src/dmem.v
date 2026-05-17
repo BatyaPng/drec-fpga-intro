@@ -8,7 +8,7 @@ module dmem(
     output wire  [31:0] o_data
 );
 
-`ifdef __ICARUS__
+// `ifndef FPGA
 
 reg  [31:0] mem [0:255];
 reg   [7:0] addr;
@@ -38,18 +38,18 @@ end
 
 assign o_data = mem[addr];
 
-`else
- 
-ram1rw32x256 ram1rw32x256(
-    .address    (i_addr ),
-    .byteena    (i_mask ),
-    .clock      (clk    ),
-    .data       (i_data ),
-    .wren       (i_we   ),
-    .q          (o_data )
-);
+// `else
 
-`endif
+// ram1rw32x256 ram1rw32x256(
+//     .address    (i_addr ),
+//     .byteena    (i_mask ),
+//     .clock      (clk    ),
+//     .data       (i_data ),
+//     .wren       (i_we   ),
+//     .q          (o_data )
+// );
+
+// `endif
 
 endmodule
 
