@@ -31,10 +31,12 @@ logic [31:0] alu_res;
 logic [1:0] o_alu_sel_b;
 logic [1:0] o_alu_sel_a;
 alu_op_t    alu_op;
+
 mem_op_t    mem_op;
 logic       mem_load;
 logic       is_load;
 logic       mem_out;
+
 br_op_t     br_op;
 logic       branch;
 logic       jump;
