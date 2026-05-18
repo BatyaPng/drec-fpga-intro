@@ -159,7 +159,7 @@ always_comb begin
         LUI: begin                                                               // LUI
             o_alu_sel_a = 2'h3;
             o_alu_sel_b = 2'h3;
-            o_wb_sel    = 2'h3;
+            o_wb_sel    = 2'h2;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -167,7 +167,7 @@ always_comb begin
             o_alu_sel_a = 2'h3;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'h3;
+            o_wb_sel    = 2'h2;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
