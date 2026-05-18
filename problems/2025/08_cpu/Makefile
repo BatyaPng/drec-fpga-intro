@@ -30,6 +30,8 @@ RTL_LIST := \
 	src/core/core_get_reg.sv \
 	src/core/core_lsu.sv \
 	src/core/core_mux4.sv \
+	src/core/core_mux3.sv \
+	src/core/core_mux2.sv \
 	src/core/core_or.sv \
 	src/core/core_pc.sv \
 	src/core/core_reg.sv \

@@ -68,6 +68,8 @@ set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_control.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_get_reg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_lsu.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_mux4.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_mux3.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_mux2.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_or.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_pc.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_reg.sv
