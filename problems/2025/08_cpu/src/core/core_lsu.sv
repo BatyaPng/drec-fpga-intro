@@ -2,6 +2,7 @@ module core_lsu
     import core_pkg::*;
 (
     input  logic [29:0] i_addr,
+    input  logic [31:0] i_offset,
     input  mem_op_t     i_mem_op,
     input  logic [31:0] i_data_core2mem,
     input  logic [31:0] i_data_mem2core,
@@ -14,7 +15,7 @@ module core_lsu
     output logic [31:0] o_mem2core_data
 );
 
-    assign o_core2mem_addr = i_addr;
+    assign o_core2mem_addr = 30'(({i_addr, 2'b0} + i_offset) >> 2);
 
     always_comb begin
         o_core2mem_we   = 1'b0;
