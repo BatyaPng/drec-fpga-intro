@@ -6,6 +6,7 @@ module core_control
     output logic [1:0] o_alu_sel_b,
     output logic       o_alu_sel_a,
     output alu_op_t    o_alu_op,
+    output logic       o_mem_off_sel,
     output mem_op_t    o_mem_op,
     output logic [1:0] o_pc_off_sel,
     output logic       o_pc_sel,
@@ -50,6 +51,7 @@ always_comb begin
     o_alu_sel_a  = 1'hX;
     o_alu_sel_b  = 2'hX;
     o_alu_op     = alu_op_t'('X);
+    o_mem_off_sel = 'X;
     o_mem_op     = mem_op_t'('X);
     o_pc_off_sel = 'X;
     o_pc_sel     = 'X;
@@ -108,6 +110,7 @@ always_comb begin
                 3'b010:  o_mem_op = SW;                                          // SW
                 default: o_mem_op = mem_op_t'('X);
             endcase
+            o_mem_off_sel = 1'b0; // s-imm
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 'X;
@@ -141,6 +144,7 @@ always_comb begin
                 3'b101:  o_mem_op = LHU;                                         // LHU
                 default: o_mem_op = mem_op_t'('X);
             endcase
+            o_mem_off_sel = 1'b0; // i-imm
             o_alu_op    = ADD;
             o_wb_sel_1  = 1'b0;
             o_wb_sel_2  = 1'b0;
