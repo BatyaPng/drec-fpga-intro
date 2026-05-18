@@ -161,7 +161,7 @@ always_comb begin
             o_wb_sel_1   = 'X;
             o_wb_sel_2   = 1'b1;
             o_pc_off_sel = 2'h2; // j-imm
-            o_pc_sel     = 1'b1;
+            o_pc_sel     = 1'b0;
             o_branch     = 1'b0;
             o_jump       = 1'b1;
         end
