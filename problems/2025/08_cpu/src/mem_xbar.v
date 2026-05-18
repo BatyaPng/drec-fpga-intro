@@ -49,8 +49,8 @@ module mem_xbar #(
     assign o_dmem_mask = i_mask;
     assign o_mmio_mask = i_mask;
 
-    assign o_dmem_wren = i_wren & is_dmem_ff;
-    assign o_mmio_wren = i_wren & is_mmio_ff;
+    assign o_dmem_wren = i_wren & is_dmem_next;
+    assign o_mmio_wren = i_wren & is_mmio_next;
 
     assign o_data = is_dmem_ff ? i_dmem_data
                                : is_mmio_ff ? i_mmio_data
