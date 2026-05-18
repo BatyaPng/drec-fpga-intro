@@ -110,7 +110,7 @@ always_comb begin
                 3'b010:  o_mem_op = SW;                                          // SW
                 default: o_mem_op = mem_op_t'('X);
             endcase
-            o_mem_off_sel = 1'b0; // s-imm
+            o_mem_off_sel = 1'b1; // s-imm
             o_alu_op      = ADD;
             o_wb_sel_1    = 'X;
             o_wb_sel_2    = 'X;
