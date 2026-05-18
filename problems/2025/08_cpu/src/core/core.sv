@@ -119,20 +119,20 @@ core_reg core_reg (
 );
 
 core_control core_control (
-    .i_isntr      (instr_data ),
+    .i_isntr       (instr_data ),
 
-    .o_alu_sel_a  (o_alu_sel_a),
-    .o_alu_sel_b  (o_alu_sel_b),
-    .o_alu_op     (alu_op     ),
-    .o_mem_off_sel(mem_off_sel),
-    .o_mem_op     (mem_op     ),
-    .o_br_op      (br_op      ),
-    .o_pc_off_sel (pc_off_sel ),
-    .o_pc_sel     (pc_sel     ),
-    .o_branch     (branch     ),
-    .o_jump       (jump       ),
-    .o_wb_sel_1   (wb_sel_1_0 ),
-    .o_wb_sel_2   (wb_sel_2_0 )
+    .o_alu_sel_a   (o_alu_sel_a),
+    .o_alu_sel_b   (o_alu_sel_b),
+    .o_alu_op      (alu_op     ),
+    .o_mem_off_sel (mem_off_sel),
+    .o_mem_op      (mem_op     ),
+    .o_br_op       (br_op      ),
+    .o_pc_off_sel  (pc_off_sel ),
+    .o_pc_sel      (pc_sel     ),
+    .o_branch      (branch     ),
+    .o_jump        (jump       ),
+    .o_wb_sel_1    (wb_sel_1_0 ),
+    .o_wb_sel_2    (wb_sel_2_0 )
 );
 
 core_mux2 mux_alu_a (
