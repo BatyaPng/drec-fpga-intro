@@ -32,7 +32,9 @@ logic [1:0] o_alu_sel_b;
 logic       o_alu_sel_a;
 alu_op_t    alu_op;
 
-mem_op_t    mem_op;
+logic        mem_off_sel;
+logic [31:0] mem_off;
+mem_op_t     mem_op;
 
 br_op_t     br_op;
 logic       branch;
@@ -122,6 +124,7 @@ core_control core_control (
     .o_alu_sel_a  (o_alu_sel_a),
     .o_alu_sel_b  (o_alu_sel_b),
     .o_alu_op     (alu_op     ),
+    .o_mem_off_sel(mem_off_sel),
     .o_mem_op     (mem_op     ),
     .o_br_op      (br_op      ),
     .o_pc_off_sel (pc_off_sel ),
@@ -226,8 +229,17 @@ core_rs_gen #(
               rd_1})
 );
 
+core_mux2 mem_off_mux (
+    .i_sel  (mem_off_sel),
+    .i_data ({s_imm,
+             i_imm}     ),
+
+    .o_data (mem_off    )
+);
+
 core_lsu core_lsu(
     .i_addr          (alu_res_0[31:2]),
+    .i_offset        (mem_off        ),
     .i_mem_op        (mem_op         ),
     .i_data_core2mem (src2           ),
     .i_data_mem2core (i_mem_data     ),
