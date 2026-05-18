@@ -75,6 +75,7 @@ set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_pc.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_reg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_sign_ext.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_rs_gen.sv
+set_global_assignment -name SYSTEMVERILOG_FILE src/core/core_sum.sv
 set_global_assignment -name SYSTEMVERILOG_FILE src/core/core.sv
 set_global_assignment -name QIP_FILE src/altera/ram1rw32x256.qip
 set_global_assignment -name QIP_FILE src/altera/imem1r32x256.qip

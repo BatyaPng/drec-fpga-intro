@@ -46,6 +46,13 @@ logic wb_sel_2_1;
 
 logic [31:0] lsu_data;
 
+logic [31:0] pc_offset;
+logic [31:0] pc_pre_target;
+logic [31:0] pc_target;
+
+logic [1:0] pc_off_sel;
+logic pc_sel;
+
 logic bru_res;
 logic branch_taken;
 logic taken;
@@ -72,7 +79,7 @@ core_pc core_pc (
     .rst_n         (rst_n       ),
 
     .i_branch      (taken       ),
-    .i_branch_addr (alu_res_0   ),
+    .i_branch_addr (pc_target   ),
 
     .o_instr_addr  (o_instr_addr),
     .o_pc          (pc          ),
@@ -110,17 +117,19 @@ core_reg core_reg (
 );
 
 core_control core_control (
-    .i_isntr     (instr_data  ),
+    .i_isntr      (instr_data ),
 
-    .o_alu_sel_a (o_alu_sel_a ),
-    .o_alu_sel_b (o_alu_sel_b ),
-    .o_alu_op    (alu_op      ),
-    .o_mem_op    (mem_op      ),
-    .o_br_op     (br_op       ),
-    .o_branch    (branch      ),
-    .o_jump      (jump        ),
-    .o_wb_sel_1  (wb_sel_1_0  ),
-    .o_wb_sel_2  (wb_sel_2_0  )
+    .o_alu_sel_a  (o_alu_sel_a),
+    .o_alu_sel_b  (o_alu_sel_b),
+    .o_alu_op     (alu_op     ),
+    .o_mem_op     (mem_op     ),
+    .o_br_op      (br_op      ),
+    .o_pc_off_sel (pc_off_sel ),
+    .o_pc_sel     (pc_sel     ),
+    .o_branch     (branch     ),
+    .o_jump       (jump       ),
+    .o_wb_sel_1   (wb_sel_1_0 ),
+    .o_wb_sel_2   (wb_sel_2_0 )
 );
 
 core_mux2 mux_alu_a (
@@ -165,6 +174,30 @@ core_and br_and (
     .i_b (bru_res     ),
 
     .o_c (branch_taken)
+);
+
+core_mux2 pc_pre_target_mux (
+    .i_sel  (pc_sel       ),
+    .i_data ({src1,
+             pc}          ),
+
+    .o_data (pc_pre_target)
+);
+
+core_mux3 pc_off_mux (
+    .i_sel  (pc_off_sel),
+    .i_data ({j_imm,
+             i_imm,
+             b_imm}    ),
+
+    .o_data (pc_offset )
+);
+
+core_sum core_sum (
+    .i_a (pc_offset    ),
+    .i_b (pc_pre_target),
+
+    .o_c (pc_target    )
 );
 
 core_or jmp_or (
