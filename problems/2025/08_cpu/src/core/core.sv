@@ -38,8 +38,11 @@ br_op_t     br_op;
 logic       branch;
 logic       jump;
 
-logic [1:0] wb_sel_0;
-logic [1:0] wb_sel_1;
+logic wb_sel_1_0;
+logic wb_sel_2_0;
+
+logic wb_sel_1_1;
+logic wb_sel_2_1;
 
 logic [31:0] lsu_data;
 
@@ -57,11 +60,12 @@ logic [4:0] rs2;
 logic [31:0] src1;
 logic [31:0] src2;
 
+logic [31:0] wb1;
 logic [31:0] dst;
 logic  [4:0] rd_0;
 logic  [4:0] rd_1;
 
-localparam WIDTH_RS = $size(wb_sel_0) + $size(pc_inc_0) + $size(alu_res_0) + $size(rd_0);
+localparam WIDTH_RS = $size({wb_sel_1_0, wb_sel_2_0}) + $size(pc_inc_0) + $size(alu_res_0) + $size(rd_0);
 
 core_pc core_pc (
     .clk           (clk         ),
@@ -115,7 +119,8 @@ core_control core_control (
     .o_br_op     (br_op       ),
     .o_branch    (branch      ),
     .o_jump      (jump        ),
-    .o_wb_sel    (wb_sel_0    )
+    .o_wb_sel_1  (wb_sel_1_0  ),
+    .o_wb_sel_2  (wb_sel_2_0  )
 );
 
 core_mux4 mux_alu_a (
@@ -178,12 +183,14 @@ core_rs_gen #(
     .clk    (clk),
     .rst_n  (rst_n),
 
-    .i_data ({wb_sel_0,
+    .i_data ({wb_sel_1_0,
+              wb_sel_2_0,
               pc_inc_0,
               alu_res_0,
               rd_0}),
 
-    .o_data ({wb_sel_1,
+    .o_data ({wb_sel_1_1,
+              wb_sel_2_1,
               pc_inc_1,
               alu_res_1,
               rd_1})
@@ -203,12 +210,20 @@ core_lsu core_lsu(
     .o_mem2core_data (lsu_data       )
 );
 
-core_mux3 mux_wb (
-    .i_sel  (wb_sel_1 ),
+core_mux2 mux_wb1 (
+    .i_sel  (wb_sel_1_1),
     .i_data ({alu_res_1,
-             lsu_data,
-             pc_inc_1}),
+              lsu_data}),
 
-    .o_data (dst    )
+    .o_data (wb1       )
 );
+
+core_mux2 mux_wb2 (
+    .i_sel  (wb_sel_2_1),
+    .i_data ({pc_inc_1,
+              wb1}     ),
+
+    .o_data (dst       )
+);
+
 endmodule

@@ -10,7 +10,8 @@ module core_control
     output br_op_t     o_br_op,
     output logic       o_branch,
     output logic       o_jump,
-    output logic [1:0] o_wb_sel
+    output logic       o_wb_sel_1,
+    output logic       o_wb_sel_2
 );
 
 `ifdef FPGA
@@ -51,7 +52,8 @@ always_comb begin
     o_br_op     = br_op_t'('X);
     o_branch    = 1'b0;
     o_jump      = 1'b0;
-    o_wb_sel    = 2'hX;
+    o_wb_sel_1  = 1'hX;
+    o_wb_sel_2  = 1'hX;
 
     case (i_isntr.opcode)
         OP_IMM: begin
@@ -69,7 +71,8 @@ always_comb begin
             endcase
             o_alu_sel_a = 2'h0;
             o_alu_sel_b = 2'h2;
-            o_wb_sel    = 2'h2;
+            o_wb_sel_1  = 1'b1;
+            o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -89,7 +92,8 @@ always_comb begin
             endcase
             o_alu_sel_a = 2'h0;
             o_alu_sel_b = 2'h3;
-            o_wb_sel    = 2'h2;
+            o_wb_sel_1  = 1'b1;
+            o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -103,7 +107,8 @@ always_comb begin
             o_alu_sel_a = 2'h0;
             o_alu_sel_b = 2'h1;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'hX;
+            o_wb_sel_1  = 'X;
+            o_wb_sel_2  = 'X;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -120,7 +125,8 @@ always_comb begin
             o_alu_sel_a = 2'h2;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'hX;
+            o_wb_sel_1  = 'X;
+            o_wb_sel_2  = 'X;
             o_branch    = 1'b1;
             o_jump      = 1'b0;
         end
@@ -136,23 +142,26 @@ always_comb begin
             o_alu_sel_a = 2'h0;
             o_alu_sel_b = 2'h2;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'h1;
+            o_wb_sel_1  = 1'b0;
+            o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
         JALR: begin                                                              // JALR;
             o_alu_sel_a = 2'h0;
             o_alu_sel_b = 2'h2;
-            o_alu_op   = ADD;
-            o_wb_sel   = 2'h0;
-            o_branch   = 1'b0;
-            o_jump     = 1'b1;
+            o_alu_op    = ADD;
+            o_wb_sel_1  = 'X;
+            o_wb_sel_2  = 1'b1;
+            o_branch    = 1'b0;
+            o_jump      = 1'b1;
         end
         JAL: begin                                                               // JAL
             o_alu_sel_a = 2'h1;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'h0;
+            o_wb_sel_1  = 'X;
+            o_wb_sel_2  = 1'b1;
             o_branch    = 1'b0;
             o_jump      = 1'b1;
         end
@@ -160,7 +169,8 @@ always_comb begin
             o_alu_sel_a = 2'h3;
             o_alu_sel_b = 2'h3;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'h2;
+            o_wb_sel_1  = 1'b1;
+            o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -168,7 +178,8 @@ always_comb begin
             o_alu_sel_a = 2'h3;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
-            o_wb_sel    = 2'h2;
+            o_wb_sel_1  = 1'b1;
+            o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
