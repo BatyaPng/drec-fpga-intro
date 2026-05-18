@@ -7,6 +7,7 @@ module core_control
     output logic [1:0] o_alu_sel_a,
     output alu_op_t    o_alu_op,
     output mem_op_t    o_mem_op,
+    output logic       o_pc_sel,
     output br_op_t     o_br_op,
     output logic       o_branch,
     output logic       o_jump,
@@ -49,6 +50,7 @@ always_comb begin
     o_alu_sel_b = 2'hX;
     o_alu_op    = alu_op_t'('X);
     o_mem_op    = mem_op_t'('X);
+    o_pc_sel    = 'X;
     o_br_op     = br_op_t'('X);
     o_branch    = 1'b0;
     o_jump      = 1'b0;
@@ -127,6 +129,7 @@ always_comb begin
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 'X;
+            o_pc_sel    = 1'b0;
             o_branch    = 1'b1;
             o_jump      = 1'b0;
         end
@@ -153,6 +156,7 @@ always_comb begin
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 1'b1;
+            o_pc_sel    = 1'b1;
             o_branch    = 1'b0;
             o_jump      = 1'b1;
         end
@@ -162,6 +166,7 @@ always_comb begin
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 1'b1;
+            o_pc_sel    = 1'b1;
             o_branch    = 1'b0;
             o_jump      = 1'b1;
         end
