@@ -238,7 +238,7 @@ core_mux2 mem_off_mux (
 );
 
 core_lsu core_lsu(
-    .i_addr          (alu_res_0[31:2]),
+    .i_addr          (src1[31:2]     ),
     .i_offset        (mem_off        ),
     .i_mem_op        (mem_op         ),
     .i_data_core2mem (src2           ),
