@@ -29,7 +29,7 @@ logic [31:0] alu_res_0;
 logic [31:0] alu_res_1;
 
 logic [1:0] o_alu_sel_b;
-logic [1:0] o_alu_sel_a;
+logic       o_alu_sel_a;
 alu_op_t    alu_op;
 
 mem_op_t    mem_op;
@@ -123,23 +123,20 @@ core_control core_control (
     .o_wb_sel_2  (wb_sel_2_0  )
 );
 
-core_mux4 mux_alu_a (
+core_mux2 mux_alu_a (
     .i_sel  (o_alu_sel_a),
 
     .i_data ({u_imm,
-             b_imm,
-             j_imm,
              src1}      ),
 
     .o_data (alu_a      )
 );
 
-core_mux4 mux_alu_b (
+core_mux3 mux_alu_b (
     .i_sel  (o_alu_sel_b),
 
     .i_data ({src2,
              i_imm,
-             s_imm,
              pc}        ),
 
     .o_data (alu_b      )
