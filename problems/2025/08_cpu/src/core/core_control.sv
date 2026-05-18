@@ -4,7 +4,7 @@ module core_control
     input  instruction_t i_isntr,
 
     output logic [1:0] o_alu_sel_b,
-    output logic [1:0] o_alu_sel_a,
+    output logic       o_alu_sel_a,
     output alu_op_t    o_alu_op,
     output mem_op_t    o_mem_op,
     output logic       o_pc_sel,
@@ -46,7 +46,7 @@ wire [2:0] f3_b   = i_isntr.payload.b.funct3;
 `endif
 
 always_comb begin
-    o_alu_sel_a = 2'hX;
+    o_alu_sel_a = 1'hX;
     o_alu_sel_b = 2'hX;
     o_alu_op    = alu_op_t'('X);
     o_mem_op    = mem_op_t'('X);
@@ -71,8 +71,8 @@ always_comb begin
                                             : SRA;                               // SRAI
                 default: o_alu_op = alu_op_t'('X);
             endcase
-            o_alu_sel_a = 2'h0;
-            o_alu_sel_b = 2'h2;
+            o_alu_sel_a = 1'h0;
+            o_alu_sel_b = 2'h1;
             o_wb_sel_1  = 1'b1;
             o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
@@ -92,8 +92,8 @@ always_comb begin
                 3'b111:  o_alu_op = AND;                                         // AND
                 default: o_alu_op = alu_op_t'('X);
             endcase
-            o_alu_sel_a = 2'h0;
-            o_alu_sel_b = 2'h3;
+            o_alu_sel_a = 1'h0;
+            o_alu_sel_b = 2'h2;
             o_wb_sel_1  = 1'b1;
             o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
@@ -106,8 +106,6 @@ always_comb begin
                 3'b010:  o_mem_op = SW;                                          // SW
                 default: o_mem_op = mem_op_t'('X);
             endcase
-            o_alu_sel_a = 2'h0;
-            o_alu_sel_b = 2'h1;
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 'X;
@@ -124,8 +122,6 @@ always_comb begin
                 3'b111:  o_br_op = BGEU;                                         // BGEU
                 default: o_br_op = br_op_t'('X);
             endcase
-            o_alu_sel_a = 2'h2;
-            o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 'X;
@@ -142,8 +138,6 @@ always_comb begin
                 3'b101:  o_mem_op = LHU;                                         // LHU
                 default: o_mem_op = mem_op_t'('X);
             endcase
-            o_alu_sel_a = 2'h0;
-            o_alu_sel_b = 2'h2;
             o_alu_op    = ADD;
             o_wb_sel_1  = 1'b0;
             o_wb_sel_2  = 1'b0;
@@ -151,8 +145,6 @@ always_comb begin
             o_jump      = 1'b0;
         end
         JALR: begin                                                              // JALR;
-            o_alu_sel_a = 2'h0;
-            o_alu_sel_b = 2'h2;
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 1'b1;
@@ -161,8 +153,6 @@ always_comb begin
             o_jump      = 1'b1;
         end
         JAL: begin                                                               // JAL
-            o_alu_sel_a = 2'h1;
-            o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
             o_wb_sel_1  = 'X;
             o_wb_sel_2  = 1'b1;
@@ -171,8 +161,8 @@ always_comb begin
             o_jump      = 1'b1;
         end
         LUI: begin                                                               // LUI
-            o_alu_sel_a = 2'h3;
-            o_alu_sel_b = 2'h3;
+            o_alu_sel_a = 1'b1;
+            o_alu_sel_b = 2'h2;
             o_alu_op    = ADD;
             o_wb_sel_1  = 1'b1;
             o_wb_sel_2  = 1'b0;
@@ -180,7 +170,7 @@ always_comb begin
             o_jump      = 1'b0;
         end
         AUIPC: begin                                                             // AUIPC
-            o_alu_sel_a = 2'h3;
+            o_alu_sel_a = 1'b1;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
             o_wb_sel_1  = 1'b1;
