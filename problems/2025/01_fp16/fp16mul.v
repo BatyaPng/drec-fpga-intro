@@ -34,7 +34,7 @@ wire sign_res = sign_a ^ sign_b;
 
 wire [6:0] exp_a_signed = {2'b00, exp_a};
 wire [6:0] exp_b_signed = {2'b00, exp_b};
-wire [6:0] exp_raw = exp_a_signed + exp_b_signed - 7'sd15;
+wire [6:0] exp_raw = exp_a_signed + exp_b_signed - 7'd15;
 
 // }}}
 
