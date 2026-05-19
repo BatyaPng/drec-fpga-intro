@@ -74,7 +74,7 @@ logic [31:0] dst;
 logic  [4:0] rd_0;
 logic  [4:0] rd_1;
 
-localparam WIDTH_RS = $size({wb_sel_1_0, wb_sel_2_0}) + $size(pc_inc_0) + $size(alu_res_0) + $size(rd_0);
+localparam WIDTH_RS = $bits({wb_sel_1_0, wb_sel_2_0}) + $bits(pc_inc_0) + $bits(alu_res_0) + $bits(rd_0);
 
 core_pc core_pc (
     .clk           (clk         ),
