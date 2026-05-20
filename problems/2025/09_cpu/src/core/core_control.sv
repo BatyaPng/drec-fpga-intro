@@ -71,138 +71,139 @@ always_comb begin
     o_bp_wb_1 = rs1_s0 == i_rd_s2 && i_rd_s2 != 0;
     o_bp_wb_2 = rs2_s0 == i_rd_s2 && i_rd_s2 != 0;
 
-    case (i_instr.opcode)
-        OP_IMM: begin
-            case (f3_i)
-                3'b000:  o_alu_op = ADD;                                         // ADDI
-                3'b010:  o_alu_op = SLT;                                         // SLTI
-                3'b011:  o_alu_op = SLTU;                                        // SLTIU
-                3'b100:  o_alu_op = XOR;                                         // XORI
-                3'b110:  o_alu_op = OR;                                          // ORI
-                3'b111:  o_alu_op = AND;                                         // ANDI
-                3'b001:  o_alu_op = SLL;                                         // SLLI
-                3'b101:  o_alu_op = !f7_5_i ? SRL                                // SRLI
-                                            : SRA;                               // SRAI
-                default: o_alu_op = alu_op_t'('X);
-            endcase
-            o_alu_sel_a = 1'h0;
-            o_alu_sel_b = 2'h1;
-            o_wb_sel_1  = 1'b1; // alu_res
-            o_wb_sel_2  = 1'b1; // wb1
-            o_branch    = 1'b0;
-            o_jump      = 1'b0;
-        end
-        OP: begin
-            case (f3_r)
-                3'b000:  o_alu_op = !f7_5_r ? ADD                                // ADD
-                                            : SUB;                               // SUB
-                3'b001:  o_alu_op = SLL;                                         // SLL
-                3'b010:  o_alu_op = SLT;                                         // SLT
-                3'b011:  o_alu_op = SLTU;                                        // SLTU
-                3'b100:  o_alu_op = XOR;                                         // XOR
-                3'b101:  o_alu_op = !f7_5_r ? SRL                                // SRL
-                                            : SRA;                               // SRA
-                3'b110:  o_alu_op = OR;                                          // OR
-                3'b111:  o_alu_op = AND;                                         // AND
-                default: o_alu_op = alu_op_t'('X);
-            endcase
-            o_alu_sel_a = 1'h0;
-            o_alu_sel_b = 2'h2;
-            o_wb_sel_1  = 1'b1; // alu_res
-            o_wb_sel_2  = 1'b1; // wb1
-            o_branch    = 1'b0;
-            o_jump      = 1'b0;
-        end
-        STORE: begin
-            case (f3_s)
-                3'b000:  o_mem_op = SB;                                          // SB
-                3'b001:  o_mem_op = SH;                                          // SH
-                3'b010:  o_mem_op = SW;                                          // SW
-                default: o_mem_op = mem_op_t'('X);
-            endcase
-            o_mem_off_sel = 1'b1; // s-imm
-            o_alu_op      = ADD;
-            o_wb_sel_1    = 'X;
-            o_wb_sel_2    = 'X;
-            o_branch      = 1'b0;
-            o_jump        = 1'b0;
-        end
-        BRANCH: begin
-            case (f3_b)
-                3'b000:  o_br_op = BEQ;                                          // BEQ
-                3'b001:  o_br_op = BNE;                                          // BNE
-                3'b100:  o_br_op = BLT;                                          // BLT
-                3'b101:  o_br_op = BGE;                                          // BGE
-                3'b110:  o_br_op = BLTU;                                         // BLTU
-                3'b111:  o_br_op = BGEU;                                         // BGEU
-                default: o_br_op = br_op_t'('X);
-            endcase
-            o_alu_op     = ADD;
-            o_wb_sel_1   = 'X;
-            o_wb_sel_2   = 'X;
-            o_pc_off_sel = 2'h0; // b-imm
-            o_pc_sel     = 1'b0;
-            o_branch     = 1'b1;
-            o_jump       = 1'b0;
-        end
-        LOAD: begin
-            case (f3_i)
-                3'b000:  o_mem_op = LB;                                          // LB
-                3'b001:  o_mem_op = LH;                                          // LH
-                3'b010:  o_mem_op = LW;                                          // LW
-                3'b100:  o_mem_op = LBU;                                         // LBU
-                3'b101:  o_mem_op = LHU;                                         // LHU
-                default: o_mem_op = mem_op_t'('X);
-            endcase
-            o_mem_off_sel = 1'b0; // i-imm
-            o_alu_op      = ADD;
-            o_wb_sel_1    = 'X;
-            o_wb_sel_2    = 1'b0; // lsu_data
-            o_branch      = 1'b0;
-            o_jump        = 1'b0;
-        end
-        JALR: begin                                                              // JALR;
-            o_alu_op     = ADD;
-            o_wb_sel_1   = 1'b0; // pc-inc
-            o_wb_sel_2   = 1'b1;
-            o_pc_off_sel = 2'h1; // i-imm
-            o_pc_sel     = 1'b1;
-            o_branch     = 1'b0;
-            o_jump       = 1'b1;
-        end
-        JAL: begin                                                               // JAL
-            o_alu_op     = ADD;
-            o_wb_sel_1   = 1'b0; // pc-inc
-            o_wb_sel_2   = 1'b1;
-            o_pc_off_sel = 2'h2; // j-imm
-            o_pc_sel     = 1'b0;
-            o_branch     = 1'b0;
-            o_jump       = 1'b1;
-        end
-        LUI: begin                                                               // LUI
-            o_alu_sel_a = 1'b1;
-            o_alu_sel_b = 2'h2;
-            o_alu_op    = ADD;
-            o_wb_sel_1  = 1'b1; // alu_res
-            o_wb_sel_2  = 1'b0;
-            o_branch    = 1'b0;
-            o_jump      = 1'b0;
-        end
-        AUIPC: begin                                                             // AUIPC
-            o_alu_sel_a = 1'b1;
-            o_alu_sel_b = 2'h0;
-            o_alu_op    = ADD;
-            o_wb_sel_1  = 1'b1; // alu_res
-            o_wb_sel_2  = 1'b0;
-            o_branch    = 1'b0;
-            o_jump      = 1'b0;
-        end
-    endcase
 
     if (i_taken_s1) begin
         o_alu_op   = NOP;
         o_wb_sel_1 = 1'b1;
         o_wb_sel_2 = 1'b1;
+    end else begin
+        case (i_instr.opcode)
+            OP_IMM: begin
+                case (f3_i)
+                    3'b000:  o_alu_op = ADD;                                         // ADDI
+                    3'b010:  o_alu_op = SLT;                                         // SLTI
+                    3'b011:  o_alu_op = SLTU;                                        // SLTIU
+                    3'b100:  o_alu_op = XOR;                                         // XORI
+                    3'b110:  o_alu_op = OR;                                          // ORI
+                    3'b111:  o_alu_op = AND;                                         // ANDI
+                    3'b001:  o_alu_op = SLL;                                         // SLLI
+                    3'b101:  o_alu_op = !f7_5_i ? SRL                                // SRLI
+                                                : SRA;                               // SRAI
+                    default: o_alu_op = alu_op_t'('X);
+                endcase
+                o_alu_sel_a = 1'h0;
+                o_alu_sel_b = 2'h1;
+                o_wb_sel_1  = 1'b1; // alu_res
+                o_wb_sel_2  = 1'b1; // wb1
+                o_branch    = 1'b0;
+                o_jump      = 1'b0;
+            end
+            OP: begin
+                case (f3_r)
+                    3'b000:  o_alu_op = !f7_5_r ? ADD                                // ADD
+                                                : SUB;                               // SUB
+                    3'b001:  o_alu_op = SLL;                                         // SLL
+                    3'b010:  o_alu_op = SLT;                                         // SLT
+                    3'b011:  o_alu_op = SLTU;                                        // SLTU
+                    3'b100:  o_alu_op = XOR;                                         // XOR
+                    3'b101:  o_alu_op = !f7_5_r ? SRL                                // SRL
+                                                : SRA;                               // SRA
+                    3'b110:  o_alu_op = OR;                                          // OR
+                    3'b111:  o_alu_op = AND;                                         // AND
+                    default: o_alu_op = alu_op_t'('X);
+                endcase
+                o_alu_sel_a = 1'h0;
+                o_alu_sel_b = 2'h2;
+                o_wb_sel_1  = 1'b1; // alu_res
+                o_wb_sel_2  = 1'b1; // wb1
+                o_branch    = 1'b0;
+                o_jump      = 1'b0;
+            end
+            STORE: begin
+                case (f3_s)
+                    3'b000:  o_mem_op = SB;                                          // SB
+                    3'b001:  o_mem_op = SH;                                          // SH
+                    3'b010:  o_mem_op = SW;                                          // SW
+                    default: o_mem_op = mem_op_t'('X);
+                endcase
+                o_mem_off_sel = 1'b1; // s-imm
+                o_alu_op      = ADD;
+                o_wb_sel_1    = 'X;
+                o_wb_sel_2    = 'X;
+                o_branch      = 1'b0;
+                o_jump        = 1'b0;
+            end
+            BRANCH: begin
+                case (f3_b)
+                    3'b000:  o_br_op = BEQ;                                          // BEQ
+                    3'b001:  o_br_op = BNE;                                          // BNE
+                    3'b100:  o_br_op = BLT;                                          // BLT
+                    3'b101:  o_br_op = BGE;                                          // BGE
+                    3'b110:  o_br_op = BLTU;                                         // BLTU
+                    3'b111:  o_br_op = BGEU;                                         // BGEU
+                    default: o_br_op = br_op_t'('X);
+                endcase
+                o_alu_op     = ADD;
+                o_wb_sel_1   = 'X;
+                o_wb_sel_2   = 'X;
+                o_pc_off_sel = 2'h0; // b-imm
+                o_pc_sel     = 1'b0;
+                o_branch     = 1'b1;
+                o_jump       = 1'b0;
+            end
+            LOAD: begin
+                case (f3_i)
+                    3'b000:  o_mem_op = LB;                                          // LB
+                    3'b001:  o_mem_op = LH;                                          // LH
+                    3'b010:  o_mem_op = LW;                                          // LW
+                    3'b100:  o_mem_op = LBU;                                         // LBU
+                    3'b101:  o_mem_op = LHU;                                         // LHU
+                    default: o_mem_op = mem_op_t'('X);
+                endcase
+                o_mem_off_sel = 1'b0; // i-imm
+                o_alu_op      = ADD;
+                o_wb_sel_1    = 'X;
+                o_wb_sel_2    = 1'b0; // lsu_data
+                o_branch      = 1'b0;
+                o_jump        = 1'b0;
+            end
+            JALR: begin                                                              // JALR;
+                o_alu_op     = ADD;
+                o_wb_sel_1   = 1'b0; // pc-inc
+                o_wb_sel_2   = 1'b1;
+                o_pc_off_sel = 2'h1; // i-imm
+                o_pc_sel     = 1'b1;
+                o_branch     = 1'b0;
+                o_jump       = 1'b1;
+            end
+            JAL: begin                                                               // JAL
+                o_alu_op     = ADD;
+                o_wb_sel_1   = 1'b0; // pc-inc
+                o_wb_sel_2   = 1'b1;
+                o_pc_off_sel = 2'h2; // j-imm
+                o_pc_sel     = 1'b0;
+                o_branch     = 1'b0;
+                o_jump       = 1'b1;
+            end
+            LUI: begin                                                               // LUI
+                o_alu_sel_a = 1'b1;
+                o_alu_sel_b = 2'h2;
+                o_alu_op    = ADD;
+                o_wb_sel_1  = 1'b1; // alu_res
+                o_wb_sel_2  = 1'b1; // wb1
+                o_branch    = 1'b0;
+                o_jump      = 1'b0;
+            end
+            AUIPC: begin                                                             // AUIPC
+                o_alu_sel_a = 1'b1;
+                o_alu_sel_b = 2'h0;
+                o_alu_op    = ADD;
+                o_wb_sel_1  = 1'b1; // alu_res
+                o_wb_sel_2  = 1'b1; // wb1
+                o_branch    = 1'b0;
+                o_jump      = 1'b0;
+            end
+        endcase
     end
 
 end

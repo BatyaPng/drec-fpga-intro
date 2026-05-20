@@ -172,7 +172,7 @@ core_rs_gen #(
              src2_s0,
              pc_s0,
              pc_inc_s0,
-             taken_s0}),
+             taken_flush}),
 
     .o_data({instr_data_s1,
              rd_s1,
@@ -274,7 +274,7 @@ core_and br_and (
 core_mux2 pc_pre_target_mux (
     .i_sel  (pc_sel       ),
     .i_data ({bp_src1,
-              pc_s0}      ),
+              pc_s1}      ),
 
     .o_data (pc_pre_target)
 );
