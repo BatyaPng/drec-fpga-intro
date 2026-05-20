@@ -1,5 +1,5 @@
-`define IMEM_FILE_TXT   "/home/oleg-linux/Study/drec-fpga-int;o/problems/2025/08_cpu/samples/fib_recursive.txt"
-`define IMEM_FILE_MIF   "/home/oleg-linux/Study/drec-fpga-intro/problems/2025/08_cpu/samples/fib_recursive.mif"
+`define IMEM_FILE_TXT   "/home/oleg-linux/Study/drec-fpga-intro/problems/2025/09_cpu/samples/fib_recursive.txt"
+`define IMEM_FILE_MIF   "/home/oleg-linux/Study/drec-fpga-intro/problems/2025/08_cpu/samples/fib_fpga.mif"
 
 `define XBAR_MMIO_START 30'h0000
 `define XBAR_MMIO_LIMIT 30'h03FF
