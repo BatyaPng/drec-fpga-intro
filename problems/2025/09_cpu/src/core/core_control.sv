@@ -1,7 +1,7 @@
 module core_control
     import core_pkg::*;
 (
-    input  instruction_t i_isntr,
+    input  instruction_t i_instr,
     input  logic [4:0]   i_rd_s2,
 
     output logic       o_bp_wb_1,
@@ -27,10 +27,10 @@ payload_r_t p_r;
 payload_s_t p_s;
 payload_b_t p_b;
 
-assign p_i = i_isntr.payload;
-assign p_r = i_isntr.payload;
-assign p_s = i_isntr.payload;
-assign p_b = i_isntr.payload;
+assign p_i = i_instr.payload;
+assign p_r = i_instr.payload;
+assign p_s = i_instr.payload;
+assign p_b = i_instr.payload;
 
 wire [2:0] f3_i   = p_i.funct3;
 wire       f7_5_i = p_i.imm_11_0[10];
@@ -41,17 +41,17 @@ wire [2:0] f3_b   = p_b.funct3;
 
 `else
 
-wire [2:0] f3_i   = i_isntr.payload.i.funct3;
-wire       f7_5_i = i_isntr.payload.i.imm_u.shift_op.funct7[5];
-wire [2:0] f3_r   = i_isntr.payload.r.funct3;
-wire       f7_5_r = i_isntr.payload.r.funct7[5];
-wire [2:0] f3_s   = i_isntr.payload.s.funct3;
-wire [2:0] f3_b   = i_isntr.payload.b.funct3;
+wire [2:0] f3_i   = i_instr.payload.i.funct3;
+wire       f7_5_i = i_instr.payload.i.imm_u.shift_op.funct7[5];
+wire [2:0] f3_r   = i_instr.payload.r.funct3;
+wire       f7_5_r = i_instr.payload.r.funct7[5];
+wire [2:0] f3_s   = i_instr.payload.s.funct3;
+wire [2:0] f3_b   = i_instr.payload.b.funct3;
 
 `endif
 
-wire [4:0] rs1_s0 = i_isntr[19:15];
-wire [4:0] rs2_s0 = i_isntr.opcode == LUI ? '0 : i_isntr[24:20];
+wire [4:0] rs1_s0 = i_instr[19:15];
+wire [4:0] rs2_s0 = i_instr.opcode == LUI ? '0 : i_instr[24:20];
 
 always_comb begin
     o_alu_sel_a   = 1'hX;
@@ -70,7 +70,7 @@ always_comb begin
     o_bp_wb_1 = rs1_s0 == i_rd_s2;
     o_bp_wb_2 = rs2_s0 == i_rd_s2;
 
-    case (i_isntr.opcode)
+    case (i_instr.opcode)
         OP_IMM: begin
             case (f3_i)
                 3'b000:  o_alu_op = ADD;                                         // ADDI

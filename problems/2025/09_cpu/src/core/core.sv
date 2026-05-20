@@ -119,7 +119,7 @@ core_reg core_reg (
 );
 
 core_control core_control (
-    .i_isntr       (instr_data ),
+    .i_instr       (instr_data ),
 
     .o_alu_sel_a   (o_alu_sel_a),
     .o_alu_sel_b   (o_alu_sel_b),
