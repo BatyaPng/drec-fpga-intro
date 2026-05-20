@@ -67,8 +67,8 @@ always_comb begin
     o_wb_sel_1    = 1'hX;
     o_wb_sel_2    = 1'hX;
 
-    o_bp_wb_1 = rs1_s0 == i_rd_s2;
-    o_bp_wb_2 = rs2_s0 == i_rd_s2;
+    o_bp_wb_1 = rs1_s0 == i_rd_s2 && i_rd_s2 != 0;
+    o_bp_wb_2 = rs2_s0 == i_rd_s2 && i_rd_s2 != 0;
 
     case (i_instr.opcode)
         OP_IMM: begin
