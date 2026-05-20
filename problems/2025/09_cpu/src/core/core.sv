@@ -66,7 +66,10 @@ logic pc_sel;
 
 logic bru_res;
 logic branch_taken;
-logic taken;
+
+logic taken_s0;
+logic taken_flush;
+logic taken_s1;
 
 logic [31:0] pc_s0;
 logic [31:0] pc_inc_s0;
@@ -93,16 +96,28 @@ logic [31:0] dst;
 
 logic  [4:0] rd_s0;
 logic  [4:0] rd_s1;
+logic  [4:0] rd_flush;
 logic  [4:0] rd_s2;
 
-localparam WIDTH_S01 = $bits(instr_data_s0) +$bits(rd_s0) + 5 * $bits(i_imm_s0) + 2 * $bits(src1_s0) + 2* $bits(pc_s0);
+localparam WIDTH_S01 = $bits(instr_data_s0) +$bits(rd_s0) + 5 * $bits(i_imm_s0) + 2 * $bits(src1_s0) + 2* $bits(pc_s0) + $bits(taken_s0);
 localparam WIDTH_S12 = $bits(rd_s1) + $bits(wb_sel_2_s1) + $bits(wb1_s1);
+
+core_mux2 #(
+    .WIDTH(1)
+) mux_taken (
+    .i_sel  (taken_s1   ),
+
+    .i_data ({1'b0,
+             taken_s0}  ),
+
+    .o_data (taken_flush)
+);
 
 core_pc core_pc (
     .clk           (clk         ),
     .rst_n         (rst_n       ),
 
-    .i_branch      (taken       ),
+    .i_branch      (taken_flush ),
     .i_branch_addr (pc_target   ),
 
     .o_instr_addr  (o_instr_addr),
@@ -156,7 +171,8 @@ core_rs_gen #(
              src1_s0,
              src2_s0,
              pc_s0,
-             pc_inc_s0}),
+             pc_inc_s0,
+             taken_s0}),
 
     .o_data({instr_data_s1,
              rd_s1,
@@ -168,27 +184,29 @@ core_rs_gen #(
              src1_s1,
              src2_s1,
              pc_s1,
-             pc_inc_s1})
+             pc_inc_s1,
+             taken_s1})
 );
 
 core_control core_control (
     .i_instr       (instr_data_s1),
-    .i_rd_s2       (rd_s2),
+    .i_rd_s2       (rd_s2        ),
+    .i_taken_s1    (taken_s1     ),
 
-    .o_bp_wb_1     (bp_wb_1),
-    .o_bp_wb_2     (bp_wb_2),
-    .o_alu_sel_a   (o_alu_sel_a),
-    .o_alu_sel_b   (o_alu_sel_b),
-    .o_alu_op      (alu_op     ),
-    .o_mem_off_sel (mem_off_sel),
-    .o_mem_op      (mem_op     ),
-    .o_br_op       (br_op      ),
-    .o_pc_off_sel  (pc_off_sel ),
-    .o_pc_sel      (pc_sel     ),
-    .o_branch      (branch     ),
-    .o_jump        (jump       ),
-    .o_wb_sel_1    (wb_sel_1   ),
-    .o_wb_sel_2    (wb_sel_2_s1)
+    .o_bp_wb_1     (bp_wb_1      ),
+    .o_bp_wb_2     (bp_wb_2      ),
+    .o_alu_sel_a   (o_alu_sel_a  ),
+    .o_alu_sel_b   (o_alu_sel_b  ),
+    .o_alu_op      (alu_op       ),
+    .o_mem_off_sel (mem_off_sel  ),
+    .o_mem_op      (mem_op       ),
+    .o_br_op       (br_op        ),
+    .o_pc_off_sel  (pc_off_sel   ),
+    .o_pc_sel      (pc_sel       ),
+    .o_branch      (branch       ),
+    .o_jump        (jump         ),
+    .o_wb_sel_1    (wb_sel_1     ),
+    .o_wb_sel_2    (wb_sel_2_s1  )
 );
 
 core_mux2 mux_bp_src1 (
@@ -281,7 +299,7 @@ core_or jmp_or (
     .i_a (jump        ),
     .i_b (branch_taken),
 
-    .o_c (taken       )
+    .o_c (taken_s0    )
 );
 
 core_mux2 mux_wb1 (
@@ -315,13 +333,24 @@ core_lsu core_lsu(
     .o_mem2core_data (lsu_data     )
 );
 
+core_mux2 # (
+    .WIDTH (5)
+) mux_rd (
+    .i_sel  (taken_s1),
+
+    .i_data ({5'b0,
+             rd_s1}  ),
+
+    .o_data (rd_flush)
+);
+
 core_rs_gen #(
     .WIDTH(WIDTH_S12)
 ) s12 (
     .clk    (clk),
     .rst_n  (rst_n),
 
-    .i_data ({rd_s1,
+    .i_data ({rd_flush,
               wb_sel_2_s1,
               wb1_s1}),
 

@@ -3,6 +3,7 @@ module core_control
 (
     input  instruction_t i_instr,
     input  logic [4:0]   i_rd_s2,
+    input  logic         i_taken_s1,
 
     output logic       o_bp_wb_1,
     output logic       o_bp_wb_2,
@@ -197,6 +198,13 @@ always_comb begin
             o_jump      = 1'b0;
         end
     endcase
+
+    if (i_taken_s1) begin
+        o_alu_op   = NOP;
+        o_wb_sel_1 = 1'b1;
+        o_wb_sel_2 = 1'b1;
+    end
+
 end
 
 endmodule
