@@ -86,8 +86,8 @@ always_comb begin
             endcase
             o_alu_sel_a = 1'h0;
             o_alu_sel_b = 2'h1;
-            o_wb_sel_1  = 1'b1;
-            o_wb_sel_2  = 1'b0;
+            o_wb_sel_1  = 1'b1; // alu_res
+            o_wb_sel_2  = 1'b1; // wb1
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -107,8 +107,8 @@ always_comb begin
             endcase
             o_alu_sel_a = 1'h0;
             o_alu_sel_b = 2'h2;
-            o_wb_sel_1  = 1'b1;
-            o_wb_sel_2  = 1'b0;
+            o_wb_sel_1  = 1'b1; // alu_res
+            o_wb_sel_2  = 1'b1; // wb1
             o_branch    = 1'b0;
             o_jump      = 1'b0;
         end
@@ -155,14 +155,14 @@ always_comb begin
             endcase
             o_mem_off_sel = 1'b0; // i-imm
             o_alu_op      = ADD;
-            o_wb_sel_1    = 1'b0;
-            o_wb_sel_2    = 1'b0;
+            o_wb_sel_1    = 'X;
+            o_wb_sel_2    = 1'b0; // lsu_data
             o_branch      = 1'b0;
             o_jump        = 1'b0;
         end
         JALR: begin                                                              // JALR;
             o_alu_op     = ADD;
-            o_wb_sel_1   = 'X;
+            o_wb_sel_1   = 1'b0; // pc-inc
             o_wb_sel_2   = 1'b1;
             o_pc_off_sel = 2'h1; // i-imm
             o_pc_sel     = 1'b1;
@@ -171,7 +171,7 @@ always_comb begin
         end
         JAL: begin                                                               // JAL
             o_alu_op     = ADD;
-            o_wb_sel_1   = 'X;
+            o_wb_sel_1   = 1'b0; // pc-inc
             o_wb_sel_2   = 1'b1;
             o_pc_off_sel = 2'h2; // j-imm
             o_pc_sel     = 1'b0;
@@ -182,7 +182,7 @@ always_comb begin
             o_alu_sel_a = 1'b1;
             o_alu_sel_b = 2'h2;
             o_alu_op    = ADD;
-            o_wb_sel_1  = 1'b1;
+            o_wb_sel_1  = 1'b1; // alu_res
             o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
@@ -191,7 +191,7 @@ always_comb begin
             o_alu_sel_a = 1'b1;
             o_alu_sel_b = 2'h0;
             o_alu_op    = ADD;
-            o_wb_sel_1  = 1'b1;
+            o_wb_sel_1  = 1'b1; // alu_res
             o_wb_sel_2  = 1'b0;
             o_branch    = 1'b0;
             o_jump      = 1'b0;
