@@ -21,6 +21,7 @@ always @(*) begin
         SRA:     o_res = $signed(i_a) >>> i_b[4:0];
         OR:      o_res = i_a | i_b;
         AND:     o_res = i_a & i_b;
+        NOP:     o_res = 0;
         default: o_res = 'X;
     endcase
 end

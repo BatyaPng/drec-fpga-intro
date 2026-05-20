@@ -10,7 +10,8 @@ typedef enum logic [3:0] {
     SRL,
     SRA,
     OR,
-    AND
+    AND,
+    NOP
 } alu_op_t;
 
 typedef enum logic [2:0] {
