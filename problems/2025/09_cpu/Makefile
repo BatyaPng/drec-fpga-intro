@@ -21,19 +21,28 @@ RTL_LIST :=
 
 endif
 
-RTL_LIST += 		\
-	src/cpu_top.v	\
-	src/core.v		\
-	src/alu.v		\
-	src/cmp.v		\
-	src/reg_file.v	\
-	src/control.v	\
-	src/imem.v		\
-	src/dmem.v		\
-	src/mem_xbar.v	\
-	src/lsu.v		\
-	src/mux4.v		\
-	src/signext.v	\
+RTL_LIST := \
+	src/core/core_pkg.sv \
+	src/core/core_alu.sv \
+	src/core/core_and.sv \
+	src/core/core_bru.sv \
+	src/core/core_control.sv \
+	src/core/core_get_reg.sv \
+	src/core/core_lsu.sv \
+	src/core/core_mux4.sv \
+	src/core/core_mux3.sv \
+	src/core/core_mux2.sv \
+	src/core/core_or.sv \
+	src/core/core_pc.sv \
+	src/core/core_reg.sv \
+	src/core/core_sign_ext.sv \
+	src/core/core_rs_gen.sv \
+	src/core/core_sum.sv \
+	src/core/core.sv \
+	src/imem.v \
+	src/dmem.v \
+	src/mem_xbar.v \
+	src/cpu_top.v
 
 ifeq ($(GUI), 1)
 VSIM_FLAGS :=
@@ -96,10 +105,22 @@ drc:
 samples:
 	$(MAKE) -C samples/
 
+work:
+	if [ ! -d "work" ]; then vlib work; fi
+
+cpu_top: work samples $(TB_LIST) $(RTL_LIST)
+	vlog -sv +incdir+./src $(TB_LIST) $(RTL_LIST)
+
+run_cpu_top: cpu_top
+	vsim -c -voptargs="+acc" work.cpu_top_tb -do "run -all; quit"
+
+gui_cpu_top: cpu_top
+	vsim -voptargs="+acc" work.cpu_top_tb -do "add wave -r /*; run -all"
+
 clean:
 	rm -rf sim dump.vcd
 	rm -rf db incremental_db output fpga.qws greybox_tmp *.bak
 	rm -rf work transcript *.ver *.rpt simulation *.wlf *.ini gate_work rtl_work
 	$(MAKE) -C samples/ clean
 
-.PHONY: syn fpga clean samples gui sim waves vsim
+.PHONY: syn fpga clean samples gui sim waves vsim work cpu_top run_cpu_top gui_cpu_top
