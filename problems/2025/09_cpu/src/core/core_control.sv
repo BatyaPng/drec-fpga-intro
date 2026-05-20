@@ -2,7 +2,12 @@ module core_control
     import core_pkg::*;
 (
     input  instruction_t i_isntr,
+    input  logic [4:0]   i_rs1_s0,
+    input  logic [4:0]   i_rs2_s0,
+    input  logic [4:0]   i_rd_s2,
 
+    output logic       o_bp_wb_1,
+    output logic       o_bp_wb_2,
     output logic [1:0] o_alu_sel_b,
     output logic       o_alu_sel_a,
     output alu_op_t    o_alu_op,
@@ -60,6 +65,9 @@ always_comb begin
     o_jump        = 1'b0;
     o_wb_sel_1    = 1'hX;
     o_wb_sel_2    = 1'hX;
+
+    o_bp_wb_1 = i_rs1_s0 == i_rd_s2;
+    o_bp_wb_2 = i_rs2_s0 == i_rd_s2;
 
     case (i_isntr.opcode)
         OP_IMM: begin
