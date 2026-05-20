@@ -2,8 +2,6 @@ module core_control
     import core_pkg::*;
 (
     input  instruction_t i_isntr,
-    input  logic [4:0]   i_rs1_s0,
-    input  logic [4:0]   i_rs2_s0,
     input  logic [4:0]   i_rd_s2,
 
     output logic       o_bp_wb_1,
@@ -52,6 +50,9 @@ wire [2:0] f3_b   = i_isntr.payload.b.funct3;
 
 `endif
 
+wire [4:0] rs1_s0 = i_isntr[19:15];
+wire [4:0] rs2_s0 = i_isntr.opcode == LUI ? '0 : i_isntr[24:20];
+
 always_comb begin
     o_alu_sel_a   = 1'hX;
     o_alu_sel_b   = 2'hX;
@@ -66,8 +67,8 @@ always_comb begin
     o_wb_sel_1    = 1'hX;
     o_wb_sel_2    = 1'hX;
 
-    o_bp_wb_1 = i_rs1_s0 == i_rd_s2;
-    o_bp_wb_2 = i_rs2_s0 == i_rd_s2;
+    o_bp_wb_1 = rs1_s0 == i_rd_s2;
+    o_bp_wb_2 = rs2_s0 == i_rd_s2;
 
     case (i_isntr.opcode)
         OP_IMM: begin
